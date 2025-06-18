@@ -49,7 +49,7 @@ export function RecentSales() {
   return (
     <Card className='h-full'>
       <CardHeader>
-        <CardTitle>Recent Sales</CardTitle>
+        <CardTitle>Recent Activity</CardTitle>
         <CardDescription>You made 265 sales this month.</CardDescription>
       </CardHeader>
       <CardContent>
