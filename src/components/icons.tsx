@@ -34,7 +34,7 @@ import {
   IconTable,
   IconPresentation,
   IconSchool,
-  IconChalkboardTeacher,
+  IconChalkboard,
   IconBooks,
   IconBook,
   IconFlask
@@ -77,7 +77,7 @@ export const Icons = {
   table: IconTable,
   presentation: IconPresentation,
   school: IconSchool,
-  teacher: IconChalkboardTeacher,
+  teacher: IconChalkboard,
   syllabus: IconBooks,
   curriculum: IconBook,
   lab: IconFlask
