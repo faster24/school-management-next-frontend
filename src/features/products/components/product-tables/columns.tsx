@@ -34,7 +34,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ cell }) => <div>{cell.getValue<Product['name']>()}</div>,
     meta: {
       label: 'Name',
-      placeholder: 'Search products...',
+      placeholder: 'Search product name...',
       variant: 'text',
       icon: Text
     },
