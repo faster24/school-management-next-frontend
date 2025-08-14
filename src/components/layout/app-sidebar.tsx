@@ -107,14 +107,17 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className='mb-20'>
         <SidebarMenu>
-          <SidebarMenuItem
-            onClick={() => signOut()}
-            className='bg-sidebar-accent mb-20 flex cursor-pointer items-center justify-center gap-2 rounded-md p-2'
-          >
-            <IconLogout className='mr-2 h-4 w-4' />
-            <p className='text-sm'>Logout</p>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className='cursor-pointer'
+              tooltip='Logout'
+              onClick={() => signOut()}
+            >
+              <IconLogout className='mr-2 h-4 w-4' />
+              <span>Logout</span>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
