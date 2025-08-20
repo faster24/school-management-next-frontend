@@ -1,3 +1,4 @@
+import { LoginUser } from '@/services/auth.services';
 import { NextAuthOptions, SessionStrategy } from 'next-auth';
 import Credential from 'next-auth/providers/credentials';
 
@@ -13,23 +14,22 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           throw new Error('Input fields are required!');
         }
-        //Test credentials
-        const user = {
-          id: '1',
-          email: 'demo@gmail.com',
-          password: 'demo123'
+
+        const loginResponse = await LoginUser({
+          email: credentials.email,
+          password: credentials.password
+        });
+
+        if (!loginResponse) {
+          throw new Error('Invalid login credentials');
+        }
+        // Return user object with required properties
+        return {
+          id: loginResponse.user.id,
+          email: loginResponse.user.email,
+          name: loginResponse.user.name,
+          accessToken: loginResponse.token
         };
-        const { email, password } = credentials;
-
-        //Replace with actually api here and check if user exists
-        if (email !== user.email) {
-          throw new Error('User not found!');
-        }
-        if (password !== user.password) {
-          throw new Error('Incorrect password!');
-        }
-
-        return user;
       }
     })
   ],
@@ -38,16 +38,20 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt' as SessionStrategy,
     maxAge: 7 * 24 * 60 * 60 // 7 days
   },
+  pages: {
+    signIn: '/auth/sign-in',
+    error: '/auth/sign-in' // Redirect errors to sign-in page
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.accessToken = user.accessToken;
       }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string;
+        session.accessToken = token.accessToken as string;
       }
       return session;
     }
