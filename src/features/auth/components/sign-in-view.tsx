@@ -24,6 +24,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -55,18 +56,29 @@ export default function SignInViewPage() {
         password: form.getValues('password'),
         redirect: false
       });
+
       if (res?.ok) {
         router.push(callbackUrl);
+        toast.success('Signed In Successfully!');
+      } else {
+        toast.error(
+          res?.error || 'Login failed. Please check your credentials.'
+        );
+        console.log('Login failed:', res?.error);
       }
     } catch (error) {
-      console.log(error);
+      console.error('Login error:', error);
+      form.setError('root', {
+        type: 'manual',
+        message: 'An unexpected error occurred. Please try again.'
+      });
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <div className='flex h-screen items-center justify-center'>
+    <div className='flex h-screen items-center justify-center gap-8'>
       <Card className='w-[400px] p-5'>
         <CardHeader className='space-y-1'>
           <CardTitle className='text-center text-2xl'>Admin Login</CardTitle>
@@ -118,7 +130,12 @@ export default function SignInViewPage() {
                 </FormItem>
               )}
             />
-            <Button type='submit' className='bg-primary w-full'>
+
+            <Button
+              type='submit'
+              className='bg-primary w-full'
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <Icons.spinner className='size-5 animate-spin' />
               ) : (
