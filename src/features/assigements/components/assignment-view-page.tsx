@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Subjects } from '@/types/school-index';
 import { getSubjectById } from '@/services/subject.services';
-import AssignmentForm from './subject-form';
+import AssignmentForm from './assignment-form';
 
 type TAssignmentsViewPageProps = {
   assignmentId: string;

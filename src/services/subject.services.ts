@@ -42,7 +42,7 @@ export const editSubject = async ({
   id: number;
 }): Promise<boolean> => {
   const res = await apiRequest({
-    method: 'put',
+    method: 'post',
     url: `/subjects/${id}`,
     data: subject,
     server: false

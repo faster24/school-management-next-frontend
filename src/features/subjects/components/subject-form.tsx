@@ -40,6 +40,7 @@ export default function SubjectForm({
   pageTitle: string;
 }) {
   const router = useRouter();
+  const isEdit = !!initialData;
   const defaultValues = {
     name: initialData?.name || '',
     code: initialData?.code || '',
@@ -53,20 +54,20 @@ export default function SubjectForm({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (initialData) {
+    if (isEdit) {
       const isSuccess = await editSubject({
         id: initialData.id,
         subject: values
       });
       if (isSuccess) {
         form.reset();
-        router.push('/subjects');
+        router.push('/dashboard/subjects');
       }
     } else {
       const isSuccess = await createSubject(values);
       if (isSuccess) {
         form.reset();
-        router.push('/subjects');
+        router.push('/dashboard/subjects');
       }
     }
   }
@@ -144,7 +145,9 @@ export default function SubjectForm({
                 </FormItem>
               )}
             />
-            <Button type='submit'>Add Subject</Button>
+            <Button type='submit'>
+              {isEdit ? 'Update' : 'Create'} Subject
+            </Button>
           </form>
         </Form>
       </CardContent>
