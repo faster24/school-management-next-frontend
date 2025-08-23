@@ -25,3 +25,12 @@ export const createAssignment = async (
   }
   return false;
 };
+
+export const getAssignmentById = async (id: number): Promise<Assignments> => {
+  const res = await apiRequest({
+    method: 'get',
+    url: `/assignments/${id}`,
+    server: true
+  });
+  return res.data;
+};

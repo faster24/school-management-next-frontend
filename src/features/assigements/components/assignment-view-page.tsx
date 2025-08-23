@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { Assignments, Subjects } from '@/types/school-index';
-import { getSubjectById } from '@/services/subject.services';
+import { Assignments } from '@/types/school-index';
 import AssignmentForm from './assignment-form';
+import { getAssignmentById } from '@/services/assignment.services';
 
 type TAssignmentsViewPageProps = {
   assignmentId: string;
@@ -14,8 +14,8 @@ export default async function AssignmentsViewPage({
   let pageTitle = 'Create New Assignment';
 
   if (assignmentId !== 'new') {
-    // const data = await getSubjectById(Number(assignmentId));
-    subjects = null;
+    const data = await getAssignmentById(Number(assignmentId));
+    subjects = data;
     if (!subjects) {
       notFound();
     }

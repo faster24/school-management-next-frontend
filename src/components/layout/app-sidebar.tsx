@@ -115,7 +115,7 @@ export default function AppSidebar() {
               tooltip='Logout'
               onClick={() => signOut()}
             >
-              <IconLogout className='mr-2 h-4 w-4' />
+              <IconLogout className='h-4 w-4' />
               <span>Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

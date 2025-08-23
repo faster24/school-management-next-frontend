@@ -41,3 +41,33 @@ export type CreateAssignment = {
   given_marks: string;
   file?: File | null;
 };
+
+export type Events = {
+  id: number;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  file?: File[];
+};
+
+export type CreateEvent = {
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  file?: File[];
+};
+
+export type Labs = {
+  id: number;
+  name: string;
+  description: string;
+  file?: File[];
+};
+
+export type CreateLab = {
+  name: string;
+  description: string;
+  file?: File[];
+};
