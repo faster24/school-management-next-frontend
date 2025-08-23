@@ -9,13 +9,15 @@ interface ApiRequestProps {
   url: string;
   data?: any;
   server?: boolean;
+  headers?: any;
 }
 
 export async function apiRequest<T = any>({
   method,
   url,
   data,
-  server = false
+  server = false,
+  headers
 }: ApiRequestProps): Promise<T> {
   let token: string | undefined;
 
@@ -37,6 +39,7 @@ export async function apiRequest<T = any>({
       url,
       data,
       headers: {
+        ...headers,
         Authorization: `Bearer ${token}`
       }
     });

@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { deleteSubject } from '@/services/subject.services';
-import { Subjects } from '@/types/school-index';
+import { Assignments } from '@/types/school-index';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface AssignmentCellActionProps {
-  data: Subjects;
+  data: Assignments;
 }
 
 export const AssignmentCellAction: React.FC<AssignmentCellActionProps> = ({

@@ -1,7 +1,7 @@
 import FormCardSkeleton from '@/components/form-card-skeleton';
 import PageContainer from '@/components/layout/page-container';
 import { Suspense } from 'react';
-import AssignmentsViewPage from '@/features/assigements/components/subject-view-page';
+import AssignmentsViewPage from '@/features/assigements/components/assignment-view-page';
 
 export const metadata = {
   title: 'Dashboard : Assignment View'
