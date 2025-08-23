@@ -1,12 +1,12 @@
 import { searchParamsCache } from '@/lib/searchparams';
-import { assignmentColumns } from './assignment-tables/columns';
-import { Subjects, Assignments } from '@/types/school-index';
-import { AssignmentTable } from './assignment-tables';
-import { getSubjects } from '@/services/subject.services';
+import { assignmentColumns } from '@/features/assigements/components/assignment-tables/columns';
+import { Assignments, Events } from '@/types/school-index';
 import { getAssignments } from '@/services/assignment.services';
-type AssignmentsListingPage = {};
+import { EventTable } from './event-tables';
+import { eventColumns } from './event-tables/columns';
+import { getEvents } from '@/services/event.services';
 
-export default async function AssignmentsListingPage({}: AssignmentsListingPage) {
+export default async function EventListingPage() {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
@@ -20,13 +20,13 @@ export default async function AssignmentsListingPage({}: AssignmentsListingPage)
     ...(categories && { categories: categories })
   };
 
-  const assignments: Assignments[] = await getAssignments();
+  const events: Events[] = await getEvents();
 
   return (
-    <AssignmentTable
-      data={assignments}
-      totalItems={assignments.length}
-      columns={assignmentColumns}
+    <EventTable
+      data={events}
+      totalItems={events.length}
+      columns={eventColumns}
     />
   );
 }
