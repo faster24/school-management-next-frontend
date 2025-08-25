@@ -17,9 +17,9 @@ export type CreateSubject = {
 
 export type Assignments = {
   id: number;
-  assignment_category_id: string;
-  subject_id: string;
-  teacher_id: string;
+  assignment_category_id: number;
+  subject_id: number;
+  teacher_id: number;
   title: string;
   description: string;
   assignment_date: string;
@@ -31,9 +31,9 @@ export type Assignments = {
 };
 
 export type CreateAssignment = {
-  assignment_category_id: string;
-  subject_id: string;
-  teacher_id: string;
+  assignment_category_id: number;
+  subject_id: number;
+  teacher_id: number;
   title: string;
   description: string;
   assignment_date: string;
@@ -70,4 +70,16 @@ export type CreateLab = {
   name: string;
   description: string;
   file?: File[];
+};
+
+export type Category = {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Data = {
+  value: string;
+  label: string;
 };

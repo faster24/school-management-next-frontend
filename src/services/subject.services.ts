@@ -10,6 +10,15 @@ export const getSubjects = async (): Promise<Subjects[]> => {
   return res.data;
 };
 
+export const getClientSubjects = async (): Promise<Subjects[]> => {
+  const res = await apiRequest({
+    method: 'get',
+    url: '/subjects',
+    server: false
+  });
+  return res.data;
+};
+
 export const createSubject = async (
   subject: CreateSubject
 ): Promise<boolean> => {

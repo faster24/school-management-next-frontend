@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/apiRequest';
-import { Assignments, CreateAssignment } from '@/types/school-index';
+import { Assignments, Category, CreateAssignment } from '@/types/school-index';
 
 export const getAssignments = async (): Promise<Assignments[]> => {
   const res = await apiRequest({
@@ -31,6 +31,28 @@ export const getAssignmentById = async (id: number): Promise<Assignments> => {
     method: 'get',
     url: `/assignments/${id}`,
     server: true
+  });
+  return res.data;
+};
+
+export const createCategory = async (name: string): Promise<boolean> => {
+  const res = await apiRequest({
+    method: 'post',
+    url: '/assignment-categories',
+    data: { name },
+    server: false
+  });
+  if (res.data) {
+    return true;
+  }
+  return false;
+};
+
+export const getCategory = async (): Promise<Category[]> => {
+  const res = await apiRequest({
+    method: 'get',
+    url: '/assignment-categories',
+    server: false
   });
   return res.data;
 };

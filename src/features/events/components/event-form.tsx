@@ -1,5 +1,6 @@
 'use client';
 
+import { DatePicker } from '@/components/date-picker';
 import { FileUploader } from '@/components/file-uploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { formatDate } from '@/lib/utils';
 import { createEvent } from '@/services/event.services';
 import { Events } from '@/types/school-index';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,11 +29,11 @@ const formSchema = z.object({
     message: 'Description must be at least 10 characters.'
   }),
   file: z.any().nullable(),
-  start_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-    message: 'Assignment date should be in the format YYYY-MM-DD'
+  start_date: z.string({
+    message: 'Start date is required.'
   }),
-  end_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-    message: 'Due date should be in the format YYYY-MM-DD'
+  end_date: z.string({
+    message: 'End date is required.'
   })
 });
 
@@ -60,6 +62,8 @@ export default function EventForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       let isSuccess = false;
+
+      console.log(values);
 
       if (isEdit) {
         // TODO: implement editAssignment API call
@@ -118,12 +122,14 @@ export default function EventForm({
                 name='start_date'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Event Start Date</FormLabel>
+                    <FormLabel>Start Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter event start date - YYYY-MM-DD'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select start date'
                       />
                     </FormControl>
                     <FormMessage />
@@ -135,12 +141,14 @@ export default function EventForm({
                 name='end_date'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Event End Date</FormLabel>
+                    <FormLabel>End Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter event end date - YYYY-MM-DD'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select end date'
                       />
                     </FormControl>
                     <FormMessage />
