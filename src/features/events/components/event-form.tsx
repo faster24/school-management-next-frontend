@@ -1,5 +1,6 @@
 'use client';
 
+import { DatePicker } from '@/components/date-picker';
 import { FileUploader } from '@/components/file-uploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { formatDate } from '@/lib/utils';
 import { createEvent } from '@/services/event.services';
 import { Events } from '@/types/school-index';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-const formSchema = z.object({
+const formSchema = z.object(
     title: z.string().min(2, {
         message: 'Assignment title must be at least 2 characters.'
     }),
@@ -81,7 +83,7 @@ export default function EventForm({
         }
     }
 
-    return (
+  return (
         <Card className='mx-auto w-full'>
             <CardHeader>
                 <CardTitle className='text-left text-2xl font-bold'>

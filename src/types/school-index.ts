@@ -32,30 +32,30 @@ export type Years = {
 };
 
 export type Assignments = {
-    id: number;
-    assignment_category_id: string;
-    subject_id: string;
-    teacher_id: string;
-    title: string;
-    description: string;
-    assignment_date: string;
-    due_date: string;
-    given_marks: string;
-    file?: File | null;
-    updated_at: string;
-    created_at: string;
+  id: number;
+  assignment_category_id: number;
+  subject_id: number;
+  teacher_id: number;
+  title: string;
+  description: string;
+  assignment_date: string;
+  due_date: string;
+  given_marks: string;
+  file?: File | null;
+  updated_at: string;
+  created_at: string;
 };
 
 export type CreateAssignment = {
-    assignment_category_id: string;
-    subject_id: string;
-    teacher_id: string;
-    title: string;
-    description: string;
-    assignment_date: string;
-    due_date: string;
-    given_marks: string;
-    file?: File | null;
+  assignment_category_id: number;
+  subject_id: number;
+  teacher_id: number;
+  title: string;
+  description: string;
+  assignment_date: string;
+  due_date: string;
+  given_marks: string;
+  file?: File | null;
 };
 
 export type Events = {
@@ -86,4 +86,16 @@ export type CreateLab = {
     name: string;
     description: string;
     file?: File[];
+};
+
+export type Category = {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Data = {
+  value: string;
+  label: string;
 };

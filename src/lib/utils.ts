@@ -1,3 +1,4 @@
+import { Data } from '@/types/school-index';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -24,3 +25,27 @@ export function formatBytes(
       : (sizes[i] ?? 'Bytes')
   }`;
 }
+
+export const formatDate = (
+  date: Date | string | number | undefined
+): string => {
+  if (!date) return '';
+
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return '';
+
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+export const formatIds = (subjects: any[]): Data[] => {
+  return subjects
+    .sort((a, b) => a.id - b.id)
+    .map((s) => ({
+      value: String(s.id),
+      label: String(s.id)
+    }));
+};

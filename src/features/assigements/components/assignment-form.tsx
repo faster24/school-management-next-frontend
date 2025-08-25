@@ -1,5 +1,8 @@
 'use client';
 
+import { CategoryModal } from '@/components/category-modal';
+import { Combobox } from '@/components/combo-box';
+import { DatePicker } from '@/components/date-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -11,10 +14,14 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { createAssignment } from '@/services/assignment.services';
-import { Assignments } from '@/types/school-index';
+import { formatDate, formatIds } from '@/lib/utils';
+import { createAssignment, getCategory } from '@/services/assignment.services';
+import { getClientSubjects } from '@/services/subject.services';
+import { Assignments, Category, Subjects } from '@/types/school-index';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -25,27 +32,18 @@ const formSchema = z.object({
   description: z.string().min(10, {
     message: 'Description must be at least 10 characters.'
   }),
-  assignment_date: z
-    .string()
-    .refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-      message: 'Assignment date should be in the format YYYY-MM-DD'
-    }),
-  due_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-    message: 'Due date should be in the format YYYY-MM-DD'
+  assignment_date: z.string({
+    message: 'Assignment date is required.'
+  }),
+  due_date: z.string({
+    message: 'Due date is required.'
   }),
   given_marks: z.string().min(1, {
     message: 'Given marks must be at least 1 character.'
   }),
   file: z.any().nullable(),
-  assignment_category_id: z.string().min(1, {
-    message: 'Assignment category must be at least 1 character.'
-  }),
-  subject_id: z.string().min(1, {
-    message: 'Subject must be at least 1 character.'
-  }),
-  teacher_id: z.string().min(1, {
-    message: 'Teacher must be at least 1 character.'
-  })
+  assignment_category_id: z.number(),
+  subject_id: z.number()
 });
 
 export default function AssignmentForm({
@@ -56,6 +54,13 @@ export default function AssignmentForm({
   pageTitle: string;
 }) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const [subjects, setSubjects] = useState<Subjects[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [open, setOpen] = useState(false);
+  const formatSubjects = formatIds(subjects);
+  const formatCategories = formatIds(categories);
+
   const isEdit = !!initialData;
   const defaultValues = {
     title: initialData?.title || '',
@@ -64,9 +69,8 @@ export default function AssignmentForm({
     due_date: initialData?.due_date || '',
     given_marks: initialData?.given_marks || '',
     file: initialData?.file || null,
-    assignment_category_id: initialData?.assignment_category_id || '',
-    subject_id: initialData?.subject_id || '',
-    teacher_id: initialData?.teacher_id || ''
+    assignment_category_id: initialData?.assignment_category_id || 0,
+    subject_id: initialData?.subject_id || 0
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -77,12 +81,16 @@ export default function AssignmentForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       let isSuccess = false;
+      const data = {
+        ...values,
+        teacher_id: session!.id
+      };
 
       if (isEdit) {
         // TODO: implement editAssignment API call
         // isSuccess = await editAssignment(initialData.id, formData);
       } else {
-        isSuccess = await createAssignment(values);
+        isSuccess = await createAssignment(data);
       }
       if (isSuccess) {
         form.reset();
@@ -92,6 +100,18 @@ export default function AssignmentForm({
       console.error('Error submitting form:', err);
     }
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [subjects, categories] = await Promise.all([
+        getClientSubjects(),
+        getCategory()
+      ]);
+      setSubjects(subjects);
+      setCategories(categories);
+    };
+    fetchData();
+  }, []);
 
   return (
     <Card className='mx-auto w-full'>
@@ -140,10 +160,12 @@ export default function AssignmentForm({
                   <FormItem>
                     <FormLabel>Assignment Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter assignment date'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select assignment date'
                       />
                     </FormControl>
                     <FormMessage />
@@ -157,10 +179,12 @@ export default function AssignmentForm({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter due date'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select due date'
                       />
                     </FormControl>
                     <FormMessage />
@@ -186,32 +210,15 @@ export default function AssignmentForm({
               />
               <FormField
                 control={form.control}
-                name='assignment_category_id'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Assignment Category ID</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter assignment category id'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name='subject_id'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Subject ID</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter subject id'
-                        {...field}
+                      <Combobox
+                        value={String(field.value)}
+                        onChange={(value) => field.onChange(Number(value))}
+                        data={formatSubjects}
                       />
                     </FormControl>
                     <FormMessage />
@@ -220,16 +227,27 @@ export default function AssignmentForm({
               />
               <FormField
                 control={form.control}
-                name='teacher_id'
+                name='assignment_category_id'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Teacher ID</FormLabel>
+                    <FormLabel>Assignment Category ID</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter teacher id'
-                        {...field}
-                      />
+                      <div>
+                        <Combobox
+                          value={String(field.value)}
+                          onChange={(value) => field.onChange(Number(value))}
+                          data={formatCategories}
+                        />
+                        <Button
+                          variant={'secondary'}
+                          size={'sm'}
+                          type='button'
+                          className='mt-2 text-sm'
+                          onClick={() => setOpen(true)}
+                        >
+                          Add New Category
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -261,6 +279,7 @@ export default function AssignmentForm({
           </form>
         </Form>
       </CardContent>
+      <CategoryModal isOpen={open} onClose={() => setOpen(false)} />
     </Card>
   );
 }
