@@ -132,7 +132,7 @@ export default function AssignmentForm({
                                     <FormItem>
                                         <FormLabel>Assignment Title</FormLabel>
                                         <FormControl>
-                                            <Input placeholder='Enter assignment title' {...field} />
+                                            <Input placeholder='Title' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -146,7 +146,7 @@ export default function AssignmentForm({
                                         <FormLabel>Description</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder='Enter assignment description'
+                                                placeholder='Description'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -201,7 +201,7 @@ export default function AssignmentForm({
                                         <FormControl>
                                             <Input
                                                 type='text'
-                                                placeholder='Enter given marks'
+                                                placeholder='Given marks'
                                                 {...field}
                                             />
                                         </FormControl>
