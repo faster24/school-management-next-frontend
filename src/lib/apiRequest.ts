@@ -1,4 +1,3 @@
-// Here we create like this coz some of the UI use server components and do not want to use localStorage to store the token
 import axiosInstance from '@/constants/axiosInstance';
 import { getServerSession } from 'next-auth';
 import { getSession } from 'next-auth/react';
@@ -49,5 +48,7 @@ export async function apiRequest<T = any>({
             console.error('API Error:', error.response.data);
             throw new Error(error.response.data.message || 'Server API error');
         }
+        console.error('Unexpected Error:', error.message || error);
+        throw new Error(error.message || 'Unknown error');
     }
 }

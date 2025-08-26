@@ -22,25 +22,23 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object(
-    title: z.string().min(2, {
-        message: 'Assignment title must be at least 2 characters.'
-    }),
-    description: z.string().min(10, {
-        message: 'Description must be at least 10 characters.'
-    }),
-    file: z
-        .any()
-        .nullable()
-        .refine((file) => !file || file.size <= 2_000_000, {
-            message: 'File size must be less than 2MB'
+    {
+        title: z.string(), description: z.string().min(10, {
+            message: 'Description must be at least 10 characters.'
         }),
-    start_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-        message: 'Assignment date should be in the format YYYY-MM-DD'
-    }),
-    end_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-        message: 'Due date should be in the format YYYY-MM-DD'
-    })
-});
+        file: z
+            .any()
+            .nullable()
+            .refine((file) => !file || file.size <= 2_000_000, {
+                message: 'File size must be less than 2MB'
+            }),
+        start_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
+            message: 'Assignment date should be in the format YYYY-MM-DD'
+        }),
+        end_date: z.string().refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
+            message: 'Due date should be in the format YYYY-MM-DD'
+        })
+    });
 
 export default function EventForm({
     initialData,
@@ -83,7 +81,7 @@ export default function EventForm({
         }
     }
 
-  return (
+    return (
         <Card className='mx-auto w-full'>
             <CardHeader>
                 <CardTitle className='text-left text-2xl font-bold'>

@@ -20,8 +20,8 @@ export function formatBytes(
     if (bytes === 0) return '0 Byte';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
     return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizeType === 'accurate'
-            ? (accurateSizes[i] ?? 'Bytest')
-            : (sizes[i] ?? 'Bytes')
+        ? (accurateSizes[i] ?? 'Bytest')
+        : (sizes[i] ?? 'Bytes')
         }`;
 }
 
@@ -41,7 +41,9 @@ export const formatDate = (
 };
 
 export const formatIds = (subjects: any[]): Data[] => {
-    return subjects
+    const subjectsArray = Array.isArray(subjects) ? subjects : [];
+
+    return subjectsArray
         .sort((a, b) => a.id - b.id)
         .map((s) => ({
             value: String(s.id),
