@@ -2,12 +2,12 @@ import { apiRequest } from '@/lib/apiRequest';
 import { CreateSubject, Subjects } from '@/types/school-index';
 
 export const getSubjects = async (): Promise<Subjects[]> => {
-  const res = await apiRequest({
-    method: 'get',
-    url: '/subjects',
-    server: true
-  });
-  return res.data;
+    const res = await apiRequest({
+        method: 'get',
+        url: '/subjects',
+        server: true
+    });
+    return res.data;
 };
 
 export const getClientSubjects = async (): Promise<Subjects[]> => {
@@ -20,56 +20,58 @@ export const getClientSubjects = async (): Promise<Subjects[]> => {
 };
 
 export const createSubject = async (
-  subject: CreateSubject
+    subject: CreateSubject
 ): Promise<boolean> => {
-  const res = await apiRequest({
-    method: 'post',
-    url: '/subjects',
-    data: subject,
-    server: false
-  });
-  if (res.data) {
-    return true;
-  }
-  return false;
+    const res = await apiRequest({
+        method: 'post',
+        url: '/subjects',
+        data: subject,
+        server: false
+    });
+    if (res.data) {
+        return true;
+    }
+    return false;
 };
 
 export const getSubjectById = async (id: number): Promise<Subjects> => {
-  const res = await apiRequest({
-    method: 'get',
-    url: `/subjects/${id}`,
-    server: true
-  });
-  return res.data;
+    const res = await apiRequest({
+        method: 'get',
+        url: `/subjects/${id}`,
+        server: true
+    });
+    return res.data;
 };
 
 export const editSubject = async ({
-  subject,
-  id
+    subject,
+    id
 }: {
-  subject: CreateSubject;
-  id: number;
+    subject: CreateSubject;
+    id: number;
 }): Promise<boolean> => {
-  const res = await apiRequest({
-    method: 'post',
-    url: `/subjects/${id}`,
-    data: subject,
-    server: false
-  });
-  if (res.data) {
-    return true;
-  }
-  return false;
+    const res = await apiRequest({
+        method: 'post',
+        url: `/subjects/${id}`,
+        data: subject,
+        server: false
+    });
+    if (res.data) {
+        return true;
+    }
+    return false;
 };
 
 export const deleteSubject = async (id: number): Promise<boolean> => {
-  const res = await apiRequest({
-    method: 'delete',
-    url: `/subjects/${id}`,
-    server: false
-  });
-  if (res.data) {
-    return true;
-  }
-  return false;
+    const res = await apiRequest({
+        method: 'delete',
+        url: `/subjects/${id}`
+    });
+
+    console.log(res);
+
+    if (res.data) {
+        return true;
+    }
+    return false;
 };
