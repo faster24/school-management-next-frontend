@@ -32,21 +32,24 @@ export async function apiRequest<T = any>({
 
   if (!token) throw new Error('No access token available');
 
-  try {
-    const res = await axiosInstance.request<T>({
-      method,
-      url,
-      data,
-      headers: {
-        ...headers,
-        Authorization: `Bearer ${token}`
-      }
-    });
-    return res.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.error('API Error:', error.response.data);
-      throw new Error(error.response.data.message || 'Server API error');
+    try {
+        const res = await axiosInstance.request<T>({
+            method,
+            url,
+            data,
+            headers: {
+                ...headers,
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res.data;
+    } catch (error: any) {
+        if (error.response) {
+            console.error('API Error:', error.response.data);
+            throw new Error(error.response.data.message || 'Server API error');
+        }
+        console.error('Unexpected Error:', error.message || error);
+        throw new Error(error.message || 'Unknown error');
     }
     console.error('Unexpected Error:', error.message || error);
     throw new Error(error.message || 'Unknown error');
