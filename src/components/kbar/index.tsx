@@ -19,8 +19,6 @@ export default function KBar({ children }: { children: React.ReactNode }) {
 
   const navItems = session?.role === 'admin' ? adminNavItems : studentNavItems;
 
-  console.log(session?.role);
-
   // These action are for the navigation
   const actions = useMemo(() => {
     // Define navigateTo inside the useMemo callback to avoid dependency array issues
