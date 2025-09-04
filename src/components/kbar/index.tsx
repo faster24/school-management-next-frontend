@@ -1,5 +1,5 @@
 'use client';
-import { navItems } from '@/constants/data';
+import { navItems as adminNavItems, studentNavItems } from '@/constants/data';
 import {
   KBarAnimator,
   KBarPortal,
@@ -11,9 +11,13 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import RenderResults from './render-result';
 import useThemeSwitching from './use-theme-switching';
+import { useSession } from 'next-auth/react';
 
 export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const navItems = session?.role === 'admin' ? adminNavItems : studentNavItems;
 
   // These action are for the navigation
   const actions = useMemo(() => {
@@ -52,7 +56,7 @@ export default function KBar({ children }: { children: React.ReactNode }) {
       // Return only valid actions (ignoring null base actions for containers)
       return baseAction ? [baseAction, ...childActions] : childActions;
     });
-  }, [router]);
+  }, [router, session?.role]);
 
   return (
     <KBarProvider actions={actions}>

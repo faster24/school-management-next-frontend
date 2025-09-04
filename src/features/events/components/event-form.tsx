@@ -5,12 +5,12 @@ import { FileUploader } from '@/components/file-uploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { formatDate } from '@/lib/utils';
@@ -20,6 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+
 
 const formSchema = z.object(
     {
@@ -41,46 +42,45 @@ const formSchema = z.object(
     });
 
 export default function EventForm({
-    initialData,
-    pageTitle
+  initialData,
+  pageTitle
 }: {
-    initialData: Events | null;
-    pageTitle: string;
+  initialData: Events | null;
+  pageTitle: string;
 }) {
-    const router = useRouter();
-    const isEdit = !!initialData;
-    const defaultValues = {
-        title: initialData?.title || '',
-        description: initialData?.description || '',
-        start_date: initialData?.start_date || '',
-        end_date: initialData?.end_date || '',
-        file: null
-    };
+  const router = useRouter();
+  const isEdit = !!initialData;
+  const defaultValues = {
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    start_date: initialData?.start_date || '',
+    end_date: initialData?.end_date || '',
+    file: null
+  };
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        values: defaultValues
-    });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    values: defaultValues
+  });
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            let isSuccess = false;
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      let isSuccess = false;
 
-            if (isEdit) {
-                // TODO: implement editAssignment API call
-                // isSuccess = await editAssignment(initialData.id, formData);
-            } else {
-                isSuccess = await createEvent(values);
-            }
-            if (isSuccess) {
-                form.reset();
-                router.push('/dashboard/events');
-            }
-        } catch (err) {
-            console.error('Error submitting form:', err);
-        }
+      if (isEdit) {
+        // TODO: implement editAssignment API call
+        // isSuccess = await editAssignment(initialData.id, formData);
+      } else {
+        isSuccess = await createEvent(values);
+      }
+      if (isSuccess) {
+        form.reset();
+        router.push('/dashboard/events');
+      }
+    } catch (err) {
+      console.error('Error submitting form:', err);
     }
-
+  }
     return (
         <Card className='mx-auto w-full'>
             <CardHeader>

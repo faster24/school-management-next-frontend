@@ -14,7 +14,6 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           throw new Error('Input fields are required!');
         }
-
         const loginResponse = await LoginUser({
           email: credentials.email,
           password: credentials.password
@@ -28,7 +27,8 @@ export const authOptions: NextAuthOptions = {
           id: loginResponse.user.id,
           email: loginResponse.user.email,
           name: loginResponse.user.name,
-          accessToken: loginResponse.token
+          accessToken: loginResponse.token,
+          role: loginResponse.user.role
         };
       }
     })
@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.accessToken = user.accessToken;
         token.id = typeof user.id === 'number' ? user.id : Number(user.id);
+        token.role = user.role;
       }
       return token;
     },
@@ -54,6 +55,7 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.accessToken = token.accessToken as string;
         session.id = token.id as number;
+        session.role = token.role as string;
       }
       return session;
     }

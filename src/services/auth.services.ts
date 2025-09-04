@@ -6,6 +6,7 @@ export interface LoginResponse {
     id: number;
     email: string;
     name?: string;
+    role: string;
   };
 }
 
@@ -31,15 +32,18 @@ export const LoginUser = async ({
     // Handle different possible response structures
     let token: string;
     let userData: any;
+    let role: string;
 
     if (responseData.data) {
       // Structure: { data: { token: "...", user: {...} } }
       token = responseData.data.token;
       userData = responseData.data.user;
+      role = responseData.data.roles[0];
     } else if (responseData.token) {
       // Structure: { token: "...", user: {...} }
       token = responseData.token;
       userData = responseData.user;
+      role = responseData.roles[0];
     } else {
       console.error('Unexpected response structure:', responseData);
       return null;
@@ -54,7 +58,8 @@ export const LoginUser = async ({
     const user = {
       id: userData?.id,
       email: userData?.email,
-      name: userData?.name
+      name: userData?.name,
+      role
     };
 
     return {
