@@ -6,5 +6,5 @@ export const getTeachers = async (): Promise<Teachers[]> => {
     method: 'get',
     url: '/teachers'
   });
-  return res.data;
+  return res.data.data;
 };
