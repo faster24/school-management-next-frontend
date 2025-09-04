@@ -1,18 +1,53 @@
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-export function middleware(request: NextRequest) {
-  const sessionToken =
-    request.cookies.get('next-auth.session-token')?.value || // localhost
-    request.cookies.get('__Secure-next-auth.session-token')?.value; // production
-
-  const isLoggedIn = !!sessionToken;
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const isProtectedRoute = pathname.startsWith('/dashboard');
+  // Determine if route requires authentication
+  const isProtectedRoute =
+    pathname.startsWith('/dashboard') || pathname.startsWith('/timetable');
 
+  // Read NextAuth JWT (supports both dev and production cookies)
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET
+  });
+  const isLoggedIn = !!token;
+
+  // Redirect unauthenticated users away from protected routes
   if (!isLoggedIn && isProtectedRoute) {
     return NextResponse.redirect(new URL('/auth/sign-in', request.url));
+  }
+
+  // Enforce role-based access for students
+  const role = token?.role as string | undefined;
+  if (role === 'student') {
+    // Allowed pages for student
+    const allowedExact = new Set<string>([
+      '/dashboard',
+      '/dashboard/',
+      '/dashboard/overview',
+      '/dashboard/assignments',
+      '/timetable'
+    ]);
+    const allowedPrefixes = ['/dashboard/overview', '/dashboard/assignments'];
+
+    const isAllowed =
+      allowedExact.has(pathname) ||
+      allowedPrefixes.some(
+        (prefix) => pathname === prefix || pathname.startsWith(prefix + '/')
+      );
+
+    // If accessing other dashboard pages, redirect to overview
+    if (pathname.startsWith('/dashboard') && !isAllowed) {
+      return NextResponse.redirect(new URL('/dashboard/overview', request.url));
+    }
+
+    // Block other app sections except timetable
+    if (!pathname.startsWith('/dashboard') && pathname !== '/timetable') {
+      return NextResponse.redirect(new URL('/dashboard/overview', request.url));
+    }
   }
 
   return NextResponse.next();

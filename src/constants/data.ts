@@ -118,6 +118,25 @@ export const navItems: NavItem[] = [
   }
 ];
 
+export const studentNavItems: NavItem[] = [
+  {
+    title: 'Dashboard',
+    url: '/dashboard/overview',
+    icon: 'dashboard',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [] // Empty array as there are no child items for Dashboard
+  },
+  {
+    title: 'Timetable',
+    url: '/timetable',
+    icon: 'table',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [] // Empty array as there are no child items for Dashboard
+  }
+];
+
 export interface SaleUser {
   id: number;
   name: string;
