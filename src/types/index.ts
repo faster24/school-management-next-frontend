@@ -11,7 +11,7 @@ export interface NavItem {
   description?: string;
   isActive?: boolean;
   items?: NavItem[];
-  allowedRoles?: Array<'admin' | 'student'>;
+  allowedRoles?: Array<'admin' | 'teacher' | 'student'>;
 }
 
 export interface NavItemWithChildren extends NavItem {

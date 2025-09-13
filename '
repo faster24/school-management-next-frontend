@@ -70,67 +70,9 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Account',
-    url: '#', // Placeholder as there is no direct link for the parent
-    icon: 'user',
-    isActive: true,
-    items: []
-  }
-];
-
-export const adminNavItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    url: '/dashboard/overview',
-    icon: 'dashboard',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Timetable',
-    url: '/dashboard/timetables',
-    icon: 'table',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Events',
-    url: '/dashboard/events',
-    icon: 'dashboard',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'User Management',
-    url: '/user-list',
-    icon: 'user',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Lab Management',
-    url: '/dashboard/labs',
-    icon: 'lab',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Assignments',
-    url: '/dashboard/assignments',
-    icon: 'presentation',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Subjects',
-    url: '/dashboard/subjects',
-    icon: 'syllabus',
+    title: 'Setting',
+    url: '/setting',
+    icon: 'settings',
     isActive: false,
     shortcut: ['d', 'd'],
     items: [] // Empty array as there are no child items for Dashboard
@@ -163,7 +105,7 @@ export const studentNavItems: NavItem[] = [
   },
   {
     title: 'Assignments Submission',
-    url: '/assignment-submission',
+    url: '/assignments',
     icon: 'table',
     isActive: false,
     shortcut: ['d', 'a'],
