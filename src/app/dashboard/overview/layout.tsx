@@ -51,7 +51,7 @@ export default async function OverViewLayout({
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Total Tutors</CardDescription>
+              <CardDescription>Total Teachers</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 1,234
               </CardTitle>
@@ -67,7 +67,7 @@ export default async function OverViewLayout({
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Courses</CardDescription>
+              <CardDescription>Subjects</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 120
               </CardTitle>
