@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
 
   // Enforce role-based access for students
   const role = token?.role as string | undefined;
+
   if (role === 'student') {
     // Allowed pages for student
     const allowedExact = new Set<string>([
@@ -31,6 +32,7 @@ export async function middleware(request: NextRequest) {
       '/dashboard/assignments',
       '/timetable'
     ]);
+
     const allowedPrefixes = ['/dashboard/overview', '/dashboard/assignments'];
 
     const isAllowed =
@@ -55,9 +57,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)'
+    // Run on everything except NextAuth and static files
+    '/((?!api/auth|_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)'
   ]
 };

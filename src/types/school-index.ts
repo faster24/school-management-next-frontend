@@ -1,34 +1,34 @@
 export type Subjects = {
-    id: number;
-    name: string;
-    code: string;
-    year_id: string;
-    teacher_id: string;
-    description: string;
-    is_active: number;
-    createdAt: string;
-    updatedAt: string;
+  id: number;
+  name: string;
+  code: string;
+  year_id: string;
+  teacher_id: string;
+  description: string;
+  is_active: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Teachers = {
-    id: number;
-    name: string;
-    email: string;
+  id: number;
+  name: string;
+  email: string;
 };
 
 export type CreateSubject = {
-    name: string;
-    code: string;
-    description: string;
-    is_active: number;
+  name: string;
+  code: string;
+  description: string;
+  is_active: number;
 };
 
 export type Years = {
-    id: number;
-    name: string;
-    is_active: number;
-    createdAt: string;
-    updatedAt: string;
+  id: number;
+  name: string;
+  is_active: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Assignments = {
@@ -59,38 +59,52 @@ export type CreateAssignment = {
 };
 
 export type Events = {
-    id: number;
-    title: string;
-    description: string;
-    start_date: string;
-    end_date: string;
-    file?: File[];
+  id: number;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  file?: File[];
 };
 
 export type CreateEvent = {
-    title: string;
-    description: string;
-    start_date: string;
-    end_date: string;
-    file?: File[];
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  file?: File[];
 };
 
 export type Labs = {
-    id: number;
-    name: string;
-    description: string;
-    file?: File[];
+  id: number;
+  name: string;
+  description: string;
+  file?: File[];
 };
 
 export type CreateLab = {
-    name: string;
-    description: string;
-    file?: File[];
+  name: string;
+  description: string;
+  file?: File[];
 };
 
 export type Category = {
   id: number;
   name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Timetable = {
+  id: number;
+  year_id: number;
+  subject_id: number;
+  start_time: string;
+  end_time: string;
+  day: string;
+  classroom: string;
+  class_type: string;
+  academic_session: string;
   created_at: string;
   updated_at: string;
 };
