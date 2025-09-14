@@ -39,7 +39,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'User Management',
-    url: '/user-list',
+    url: '/dashboard/user-management',
     icon: 'user',
     isActive: false,
     shortcut: ['d', 'd'],
@@ -71,7 +71,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Account',
-    url: '#', // Placeholder as there is no direct link for the parent
+    url: '/dashboard/account', // Placeholder as there is no direct link for the parent
     icon: 'user',
     isActive: true,
     items: []
@@ -175,6 +175,14 @@ export const studentNavItems: NavItem[] = [
     icon: 'table',
     isActive: false,
     shortcut: ['d', 'a'],
+    items: [] // Empty array as there are no child items for Dashboard
+  },
+  {
+    title: 'Account',
+    url: '/dashboard/account',
+    icon: 'user',
+    isActive: false,
+    shortcut: ['d', 'd'],
     items: [] // Empty array as there are no child items for Dashboard
   }
 ];

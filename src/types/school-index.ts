@@ -124,3 +124,38 @@ export type Submission = {
   student_id: number;
   file?: File[];
 };
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  qualification: string | null;
+  birth_date: string | null;
+  address: string | null;
+  image_url: string | null;
+  enrollment_id: number | null;
+  roles: Role[];
+  created_at: string;
+  year_id: number;
+};
+
+export type CreateUser = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  qualification: string | null;
+  birth_date: string | null;
+  address: string | null;
+  user_image: string | null;
+  enrollment_id: number | null;
+  role: string;
+  year_id: number | null;
+};
+
+export type Role = {
+  id: number;
+  name: string;
+};
