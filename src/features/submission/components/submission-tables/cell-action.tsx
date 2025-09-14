@@ -52,6 +52,12 @@ export const SubmissionCellAction: React.FC<SubmissionCellActionProps> = ({
           >
             <Send className='mr-2 h-4 w-4' /> Submit
           </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={submittedAssignments.includes(data.id)}
+            onClick={() => onConfirm()}
+          >
+            <Send className='mr-2 h-4 w-4' /> Status
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
