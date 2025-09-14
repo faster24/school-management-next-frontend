@@ -23,35 +23,6 @@ export async function middleware(request: NextRequest) {
   // Enforce role-based access for students
   const role = token?.role as string | undefined;
 
-  if (role === 'student') {
-    // Allowed pages for student
-    const allowedExact = new Set<string>([
-      '/dashboard',
-      '/dashboard/',
-      '/dashboard/overview',
-      '/dashboard/assignments',
-      '/timetable'
-    ]);
-
-    const allowedPrefixes = ['/dashboard/overview', '/dashboard/assignments'];
-
-    const isAllowed =
-      allowedExact.has(pathname) ||
-      allowedPrefixes.some(
-        (prefix) => pathname === prefix || pathname.startsWith(prefix + '/')
-      );
-
-    // If accessing other dashboard pages, redirect to overview
-    if (pathname.startsWith('/dashboard') && !isAllowed) {
-      return NextResponse.redirect(new URL('/dashboard/overview', request.url));
-    }
-
-    // Block other app sections except timetable
-    if (!pathname.startsWith('/dashboard') && pathname !== '/timetable') {
-      return NextResponse.redirect(new URL('/dashboard/overview', request.url));
-    }
-  }
-
   return NextResponse.next();
 }
 

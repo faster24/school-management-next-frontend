@@ -44,6 +44,7 @@ export type Assignments = {
   file?: File | null;
   updated_at: string;
   created_at: string;
+  submissions: Submission[];
 };
 
 export type CreateAssignment = {
@@ -116,4 +117,10 @@ export type CreateTimetable = {
 export type Data = {
   value: string;
   label: string;
+};
+
+export type Submission = {
+  assignment_id: number;
+  student_id: number;
+  file?: File[];
 };

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { Input } from './ui/input';
 import { createCategory } from '@/services/assignment.services';
+import { useRouter } from 'next/navigation';
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   const [isMounted, setIsMounted] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);

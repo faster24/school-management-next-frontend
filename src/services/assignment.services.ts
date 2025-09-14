@@ -1,5 +1,10 @@
 import { apiRequest } from '@/lib/apiRequest';
-import { Assignments, Category, CreateAssignment } from '@/types/school-index';
+import {
+  Assignments,
+  Category,
+  CreateAssignment,
+  Submission
+} from '@/types/school-index';
 
 export const getAssignments = async (): Promise<Assignments[]> => {
   const res = await apiRequest({
@@ -49,4 +54,17 @@ export const getCategory = async (): Promise<Category[]> => {
     server: false
   });
   return res.data; // Changed from res.data
+};
+
+//Student submission
+export const submitAssignment = async (
+  assignment: Submission
+): Promise<boolean> => {
+  const res = await apiRequest({
+    method: 'post',
+    url: '/submissions',
+    data: assignment,
+    server: false
+  });
+  return !!res; // Simplified boolean conversion
 };
