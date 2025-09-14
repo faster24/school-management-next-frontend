@@ -17,12 +17,11 @@ export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { data: session } = useSession();
 
-    const navItems =
-        ['admin', 'teacher'].includes(session?.role)
-            ? adminNavItems
-            : studentNavItems;
+  const navItems = ['admin', 'teacher'].includes(session?.role as string)
+    ? adminNavItems
+    : studentNavItems;
 
-    console.log(navItems);
+  console.log(navItems);
 
   // These action are for the navigation
   const actions = useMemo(() => {

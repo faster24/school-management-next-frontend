@@ -124,10 +124,12 @@ export default function EventForm({
                   <FormItem>
                     <FormLabel>Event Start Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter event start date - YYYY-MM-DD'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select event start date'
                       />
                     </FormControl>
                     <FormMessage />
@@ -141,10 +143,12 @@ export default function EventForm({
                   <FormItem>
                     <FormLabel>Event End Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='Enter event end date - YYYY-MM-DD'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select event end date'
                       />
                     </FormControl>
                     <FormMessage />
