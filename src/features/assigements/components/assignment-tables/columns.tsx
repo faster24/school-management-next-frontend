@@ -24,7 +24,7 @@ export const assignmentColumns: ColumnDef<Assignments>[] = [
     },
     { accessorKey: 'assignment_category.name', header: 'Category' },
     { accessorKey: 'subject.name', header: 'Subject' },
-    { accessorKey: 'teacher.name', header: 'Teacher' },
+    { accessorKey: 'teacher.name', header: 'Created by' },
     {
         accessorKey: 'description',
         header: 'Description',
