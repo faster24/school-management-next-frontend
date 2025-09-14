@@ -2,7 +2,7 @@ import { searchParamsCache } from '@/lib/searchparams';
 import { timetableColumns } from './timetable-tables/columns';
 import { TimetableTable } from './timetable-tables';
 import { Timetable } from '@/types/school-index';
-import { getSubjects } from '@/services/subject.services';
+import { getTimetables } from '@/services/timetable.services';
 type TimetableListingPage = {};
 
 export default async function TimetableListingPage({}: TimetableListingPage) {
@@ -19,7 +19,7 @@ export default async function TimetableListingPage({}: TimetableListingPage) {
     ...(categories && { categories: categories })
   };
 
-  const timetable: Timetable[] = [];
+  const timetable: Timetable[] = await getTimetables();
 
   return (
     <TimetableTable
