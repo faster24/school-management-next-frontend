@@ -98,15 +98,19 @@ export type Category = {
 export type Timetable = {
   id: number;
   year_id: number;
-  subject_id: number;
-  start_time: string;
-  end_time: string;
-  day: string;
-  classroom: string;
-  class_type: string;
-  academic_session: string;
+  name: string;
+  description: string;
+  year: Years;
+  file?: File[];
   created_at: string;
   updated_at: string;
+};
+
+export type CreateTimetable = {
+  year_id: number;
+  name: string;
+  description: string;
+  file?: File[];
 };
 
 export type Data = {

@@ -1,26 +1,26 @@
 import { notFound } from 'next/navigation';
-import SubjectForm from './subject-form';
-import { Subjects } from '@/types/school-index';
-import { getSubjectById } from '@/services/subject.services';
+import { Timetable } from '@/types/school-index';
+import TimetableForm from './timetable-form';
+import { getTimetableById } from '@/services/timetable.services';
 
 type TSubjectViewPageProps = {
-  subjectId: string;
+  timetableId: string;
 };
 
 export default async function TimetableViewPage({
-  subjectId
+  timetableId
 }: TSubjectViewPageProps) {
-  let subjects: Subjects | null = null;
-  let pageTitle = 'Create New Subject';
+  let timetable: Timetable | null = null;
+  let pageTitle = 'Create New Timetable';
 
-  if (subjectId !== 'new') {
-    const data = await getSubjectById(Number(subjectId));
-    subjects = data;
-    if (!subjects) {
+  if (timetableId !== 'new') {
+    const data = await getTimetableById(Number(timetableId));
+    timetable = data;
+    if (!timetable) {
       notFound();
     }
-    pageTitle = `Edit Subject`;
+    pageTitle = `Edit Timetable`;
   }
 
-  return <SubjectForm initialData={subjects} pageTitle={pageTitle} />;
+  return <TimetableForm initialData={timetable} pageTitle={pageTitle} />;
 }

@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { deleteSubject } from '@/services/subject.services';
+import { deleteTimetable } from '@/services/timetable.services';
 import { Timetable } from '@/types/school-index';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
@@ -18,7 +19,7 @@ interface TimetableCellActionProps {
   data: Timetable;
 }
 
-export const TimetableCellAction: React.FC<SubjectCellActionProps> = ({
+export const TimetableCellAction: React.FC<TimetableCellActionProps> = ({
   data
 }) => {
   const [loading] = useState(false);
@@ -26,7 +27,7 @@ export const TimetableCellAction: React.FC<SubjectCellActionProps> = ({
   const router = useRouter();
 
   const onConfirm = async () => {
-    const isSuccess = await deleteSubject(data.id);
+    const isSuccess = await deleteTimetable(data.id);
     if (isSuccess) {
       setOpen(false);
       router.refresh();

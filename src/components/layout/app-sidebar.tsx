@@ -39,10 +39,9 @@ export default function AppSidebar() {
     // Side effects based on sidebar state changes
   }, [isOpen]);
 
-    const navItems =
-        ['admin', 'teacher'].includes(session?.role)
-            ? adminNavItems
-            : studentNavItems;
+  const navItems = ['admin', 'teacher'].includes(session?.role as string)
+    ? adminNavItems
+    : studentNavItems;
 
   return (
     <Sidebar collapsible='icon'>
