@@ -108,7 +108,7 @@ export default function TimetableForm({
                 name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Subject Name</FormLabel>
+                    <FormLabel>Title</FormLabel>
                     <FormControl>
                       <Input placeholder='Enter subject name' {...field} />
                     </FormControl>

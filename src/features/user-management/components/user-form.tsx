@@ -20,6 +20,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { createUser, editUser } from '@/services/user.services';
+import { DatePicker } from '@/components/date-picker';
+import { formatDate } from '@/lib/utils';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,11 +34,10 @@ const formSchema = z.object({
     message: 'Email must be a valid email.'
   }),
   password: z.string().optional(),
-  confirmPassword: z.string().optional(),
-  enrollment_id: z.number().nullable(),
+  confirm_password: z.string().optional(),
   quallification: z.string().nullable(),
-  birth_date: z.string().min(2, {
-    message: 'Birth date must be at least 2 characters.'
+  birth_date: z.string({
+    message: 'Birth date is required.'
   }),
   address: z.string().nullable(),
   user_image: z.any().nullable(),
@@ -61,8 +62,7 @@ export default function UserForm({
     email: initialData?.email || '',
     phone: initialData?.phone || '',
     password: '',
-    confirmPassword: '',
-    enrollment_id: initialData?.enrollment_id || 0,
+    confirm_password: '',
     quallification: initialData?.qualification || '',
     birth_date: initialData?.birth_date || '',
     address: initialData?.address || '',
@@ -96,8 +96,7 @@ export default function UserForm({
       email: values.email ?? '',
       phone: values.phone ?? '',
       password: values.password ?? '',
-      confirmPassword: values.confirmPassword ?? '',
-      enrollment_id: values.enrollment_id,
+      confirm_password: values.confirm_password ?? '',
       qualification: values.quallification ?? '',
       birth_date: values.birth_date ?? '',
       address: values.address,
@@ -112,13 +111,13 @@ export default function UserForm({
       });
       if (isSuccess) {
         form.reset();
-        router.push('/dashboard/users');
+        router.push('/dashboard/user-management');
       }
     } else {
       const isSuccess = await createUser(data);
       if (isSuccess) {
         form.reset();
-        router.push('/dashboard/users');
+        router.push('/dashboard/user-management');
       }
     }
   }
@@ -201,7 +200,7 @@ export default function UserForm({
               />
               <FormField
                 control={form.control}
-                name='confirmPassword'
+                name='confirm_password'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
@@ -216,6 +215,8 @@ export default function UserForm({
                   </FormItem>
                 )}
               />
+
+              {/* ✅ Updated Birth Date field with DatePicker */}
               <FormField
                 control={form.control}
                 name='birth_date'
@@ -223,16 +224,17 @@ export default function UserForm({
                   <FormItem>
                     <FormLabel>Birth Date</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Enter user birth date'
-                        className='resize-none'
-                        {...field}
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) => field.onChange(formatDate(date))}
+                        text='Select birth date'
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='address'
@@ -289,28 +291,6 @@ export default function UserForm({
               />
             </div>
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-              <FormField
-                control={form.control}
-                name='enrollment_id'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Enrollment ID</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter user enrollment id'
-                        className='resize-none'
-                        {...field}
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This input is optional for all.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name='quallification'
