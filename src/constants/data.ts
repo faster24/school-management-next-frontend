@@ -162,14 +162,6 @@ export const studentNavItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Timetable',
-    url: '/dashboard/timetable',
-    icon: 'table',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
     title: 'Assignments Submission',
     url: '/dashboard/submission',
     icon: 'table',
