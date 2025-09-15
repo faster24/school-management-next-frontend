@@ -22,3 +22,22 @@ export const getSubmissionById = async (id: number): Promise<Submission> => {
   });
   return res; // Changed from res.data
 };
+
+
+export const getAssignmentById = async (id: number): Promise<Assignments> => {
+  const res = await apiRequest({
+    method: 'get',
+    url: `/assignments/${id}`,
+    server: false
+  });
+  return res; // Changed from res.data
+};
+
+export const createSubmission = async (): Promise<Submission> => {
+    return;
+}
+
+export const editSubmission = async (): Promise<Submission> => {
+    return;
+}
+
