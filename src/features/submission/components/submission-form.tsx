@@ -12,51 +12,43 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import * as z from 'zod';
 
 import { getAssignmentById } from '@/services/submission.services';
-import { createSubmission, editSubmission } from '@/services/submission.services';
-import { getUsers } from '@/services/user.services';
-import { Assignments, Submission, User } from '@/types/school-index';
+import { createSubmission } from '@/services/submission.services';
+import { Assignments } from '@/types/school-index';
+import { DatePicker } from '@/components/date-picker';
+import { formatDate } from '@/lib/format';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
-  assignment_id: z.string().min(1, { message: 'Assignment is required' }),
-  student_id: z.string().min(1, { message: 'Student is required' }),
   submitted_at: z.string().min(1, { message: 'Submission date is required' }),
-  total_mark: z
-    .string()
-    .min(1, { message: 'Total mark is required' }),
-  mark_in_percentage: z
-    .string()
-    .min(1, { message: 'Percentage is required' }),
-  graded_by: z.string().min(1, { message: 'Grader is required' }),
-  remark: z.string().optional()
+  file: z
+    .any()
+    .nullable()
+    .refine((file) => !file || file.size <= 2_000_000, {
+      message: 'File size must be less than 2MB'
+    })
 });
 
 export default function SubmissionForm({
-  initialData,
-  pageTitle
+  assgnmentId,
+  pageTitle,
+  studentId
 }: {
-  initialData: Submission | null;
+  assgnmentId: string;
   pageTitle: string;
+  studentId: number;
 }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const assignmentIdFromQuery = searchParams.get('assignment_id');
-  const isEdit = !!initialData;
 
   const defaultValues = {
-    assignment_id: initialData?.assignment_id?.toString() || assignmentIdFromQuery || '',
-    student_id: initialData?.student_id?.toString() || '',
-    submitted_at: initialData?.submitted_at || '',
-    total_mark: initialData?.total_mark?.toString() || '',
-    mark_in_percentage: initialData?.mark_in_percentage?.toString() || '',
-    graded_by: initialData?.graded_by?.toString() || '',
-    remark: initialData?.remark || ''
+    assignment_id: '',
+    file: null,
+    submitted_at: ''
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -65,169 +57,91 @@ export default function SubmissionForm({
   });
 
   const [assignment, setAssignment] = useState<Assignments | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     async function fetchAssignment() {
-      if (assignmentIdFromQuery) {
+      if (assgnmentId) {
         try {
-          const res = await getAssignmentById(Number(assignmentIdFromQuery));
-                    console.log(res);
+          const res = await getAssignmentById(Number(assgnmentId));
           setAssignment(res);
         } catch (error) {
           console.error('Failed to fetch assignment:', error);
         }
       }
     }
-
-    async function fetchUsers() {
-      try {
-        const res = await getUsers();
-        setUsers(res);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      }
-    }
-
     fetchAssignment();
-    fetchUsers();
-  }, [assignmentIdFromQuery]);
+  }, [assgnmentId]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (isEdit) {
-      const isSuccess = await editSubmission({
-        id: initialData!.id,
-        submission: values
-      });
-      if (isSuccess) {
-        form.reset();
-        router.push('/dashboard/submissions');
-      }
-    } else {
-      const isSuccess = await createSubmission(values);
-      if (isSuccess) {
-        form.reset();
-        router.push('/dashboard/submissions');
-      }
+    const data = {
+      assignment_id: Number(assgnmentId),
+      file: values.file,
+      submitted_at: values.submitted_at,
+      student_id: studentId
+    };
+    const isSuccess = await createSubmission(data);
+    if (isSuccess) {
+      form.reset();
+      router.push('/dashboard/submission');
     }
   }
 
   return (
-    <Card className="mx-auto w-full">
+    <Card className='mx-auto w-full'>
       <CardHeader>
-        <CardTitle className="text-left text-2xl font-bold">
+        <CardTitle className='text-left text-2xl font-bold'>
           {pageTitle}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
               {/* Assignment */}
-              <FormField
-                control={form.control}
-                name="assignment_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Assignment</FormLabel>
-                    <FormControl>
-                      <select {...field} className="w-full rounded border p-2" disabled>
-                        <option value="">
-                          {assignment ? assignment.title : 'Loading...'}
-                        </option>
-                        {assignment && (
-                          <option value={assignment.id}>{assignment.title}</option>
-                        )}
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Student */}
-              <FormField
-                control={form.control}
-                name="student_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Student</FormLabel>
-                    <FormControl>
-                      <select {...field} className="w-full rounded border p-2">
-                        <option value="">Select a student</option>
-                        {users.map((user) => (
-                          <option key={user.id} value={user.id}>
-                            {user.name}
-                          </option>
-                        ))}
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className='grid w-full items-center gap-3'>
+                <Label htmlFor='email'>Assignmen</Label>
+                <Input
+                  type='text'
+                  id='text'
+                  placeholder='Assignment'
+                  value={assignment?.title ?? ''}
+                  readOnly
+                />
+              </div>
 
               {/* Submitted At */}
               <FormField
                 control={form.control}
-                name="submitted_at"
+                name='submitted_at'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Submitted At</FormLabel>
                     <FormControl>
-                      <Input type="datetime-local" {...field} />
+                      <DatePicker
+                        date={field.value ? new Date(field.value) : undefined}
+                        onDateChange={(date) =>
+                          field.onChange(formatDate(date))
+                        }
+                        text='Select date'
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {/* Total Mark */}
               <FormField
                 control={form.control}
-                name="total_mark"
+                name='file'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Total Mark</FormLabel>
+                    <FormLabel>File</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Percentage */}
-              <FormField
-                control={form.control}
-                name="mark_in_percentage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mark in %</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Graded By */}
-              <FormField
-                control={form.control}
-                name="graded_by"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Graded By</FormLabel>
-                    <FormControl>
-                      <select {...field} className="w-full rounded border p-2">
-                        <option value="">Select grader</option>
-                        {users.map((user) => (
-                          <option key={user.id} value={user.id}>
-                            {user.name}
-                          </option>
-                        ))}
-                      </select>
+                      <Input
+                        type='file'
+                        onChange={(e) => {
+                          field.onChange(e.target.files?.[0] ?? null);
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -235,27 +149,8 @@ export default function SubmissionForm({
               />
             </div>
 
-            {/* Remark */}
-            <FormField
-              control={form.control}
-              name="remark"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Remark</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Enter remarks"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" disabled={!assignment}>
-              {isEdit ? 'Update' : 'Create'} Submission
+            <Button type='submit' disabled={!assignment}>
+              Submit Assignment
             </Button>
           </form>
         </Form>
