@@ -11,7 +11,7 @@ export default async function SubmissionViewPage({
     submissionId
 }: TSubmissionViewPageProps) {
   let submission: Submission | null = null;
-  let pageTitle = 'Submission Submssion';
+  let pageTitle = 'Submission';
 
   if (submissionId !== 'new') {
     const data = await getSubmissionById(Number(submission));

@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Assignments } from '@/types/school-index';
 import { SubmissionCellAction } from './cell-action';
 import { SubmissionStatus } from '../submission-status';
+import { getAssignments } from '@/services/assignment.services';
 
 export const submissionColumns: ColumnDef<Assignments>[] = [
   { accessorKey: 'id', header: 'ID' },
@@ -26,7 +27,7 @@ export const submissionColumns: ColumnDef<Assignments>[] = [
     )
   },
   {
-    id: 'actions',
+    id: 'Submit',
     cell: ({ row }) => (
       <SubmissionCellAction
         data={row.original}
