@@ -20,9 +20,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/sign-in', request.url));
   }
 
-  // Enforce role-based access for students
-  const role = token?.role as string | undefined;
-
   return NextResponse.next();
 }
 

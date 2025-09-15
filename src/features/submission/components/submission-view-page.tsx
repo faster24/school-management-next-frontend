@@ -8,10 +8,10 @@ type TSubmissionViewPageProps = {
 };
 
 export default async function SubmissionViewPage({
-    submissionId
+  submissionId
 }: TSubmissionViewPageProps) {
   let submission: Submission | null = null;
-  let pageTitle = 'Submission Submssion';
+  let pageTitle = 'Create New Submission';
 
   if (submissionId !== 'new') {
     const data = await getSubmissionById(Number(submission));
@@ -22,5 +22,6 @@ export default async function SubmissionViewPage({
     pageTitle = `Edit Submission`;
   }
 
-  return <SubmissionForm initialData={submission} pageTitle={pageTitle} />;
+  // return <SubmissionForm initialData={submission} pageTitle={pageTitle} />;
+  return <div>Submission View Page</div>;
 }

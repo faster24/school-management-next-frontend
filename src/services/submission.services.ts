@@ -1,10 +1,5 @@
 import { apiRequest } from '@/lib/apiRequest';
-import {
-  Assignments,
-  Category,
-  CreateAssignment,
-  Submission
-} from '@/types/school-index';
+import { Submission } from '@/types/school-index';
 
 //Student submission
 export const submitAssignment = async (
@@ -27,4 +22,3 @@ export const getSubmissionById = async (id: number): Promise<Submission> => {
   });
   return res; // Changed from res.data
 };
-
