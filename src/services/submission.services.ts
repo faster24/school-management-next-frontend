@@ -1,5 +1,10 @@
 import { apiRequest } from '@/lib/apiRequest';
-import { Submission } from '@/types/school-index';
+import {
+  Assignments,
+  AssignmentSubmission,
+  Submission,
+  UpdateAssigmentSubmission
+} from '@/types/school-index';
 
 //Student submission
 export const submitAssignment = async (
@@ -23,21 +28,72 @@ export const getSubmissionById = async (id: number): Promise<Submission> => {
   return res; // Changed from res.data
 };
 
-
 export const getAssignmentById = async (id: number): Promise<Assignments> => {
   const res = await apiRequest({
     method: 'get',
     url: `/assignments/${id}`,
     server: false
   });
-  return res; // Changed from res.data
+  return res.data; // Changed from res.data
 };
 
-export const createSubmission = async (): Promise<Submission> => {
-    return;
-}
+export const createSubmission = async (v: Submission): Promise<Submission> => {
+  const res = await apiRequest({
+    method: 'post',
+    url: '/submissions',
+    data: v,
+    server: false
+  });
+  return res.data;
+};
 
-export const editSubmission = async (): Promise<Submission> => {
-    return;
-}
+//Teacher -> get submission
+export const getAssignmentSubmissions = async (): Promise<
+  AssignmentSubmission[]
+> => {
+  const res = await apiRequest({
+    method: 'get',
+    url: '/submissions',
+    server: true
+  });
+  return res.data.data;
+};
 
+export const getAssignmentSubmissionsById = async (
+  id: number
+): Promise<AssignmentSubmission> => {
+  const res = await apiRequest({
+    method: 'get',
+    url: `/submissions/${id}`,
+    server: true
+  });
+  return res.data;
+};
+
+//Here the PUT and DELETE method need to fix or something
+export const updateAssigmentSubmission = async (
+  v: UpdateAssigmentSubmission
+): Promise<boolean> => {
+  const res = await apiRequest({
+    method: 'post',
+    url: `/submissions/${v.id}`,
+    server: false
+  });
+
+  if (res.success) {
+    return true;
+  }
+  return false;
+};
+
+export const deleteSubmission = async (id: number): Promise<boolean> => {
+  const res = await apiRequest({
+    method: 'post',
+    url: `/submissions/${id}`,
+    server: false
+  });
+  if (res.success) {
+    return true;
+  }
+  return false;
+};

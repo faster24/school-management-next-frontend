@@ -62,6 +62,14 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
+    title: 'Assignment Submission',
+    url: '/dashboard/assignments-submission',
+    icon: 'check',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [] // Empty array as there are no child items for Dashboard
+  },
+  {
     title: 'Subjects',
     url: '/dashboard/subjects',
     icon: 'syllabus',

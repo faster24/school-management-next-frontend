@@ -1,27 +1,22 @@
-import { notFound } from 'next/navigation';
-import { Submission } from '@/types/school-index';
 import SubmissionForm from './submission-form';
-import { getSubmissionById } from '@/services/submission.services';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 
 type TSubmissionViewPageProps = {
-  submissionId: string;
+  assgnmentId: string;
 };
 
 export default async function SubmissionViewPage({
-  submissionId
+  assgnmentId
 }: TSubmissionViewPageProps) {
-  let submission: Submission | null = null;
+  const session = await getServerSession(authOptions);
   let pageTitle = 'Submission';
 
-  if (submissionId !== 'new') {
-    const data = await getSubmissionById(Number(submission));
-    submission = data;
-    if (!submission) {
-      notFound();
-    }
-    pageTitle = `Edit Submission`;
-  }
-
-  // return <SubmissionForm initialData={submission} pageTitle={pageTitle} />;
-  return <div>Submission View Page</div>;
+  return (
+    <SubmissionForm
+      assgnmentId={assgnmentId}
+      studentId={session?.id!}
+      pageTitle={pageTitle}
+    />
+  );
 }

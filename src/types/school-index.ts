@@ -159,3 +159,32 @@ export type Role = {
   id: number;
   name: string;
 };
+
+export type Student = {
+  id: number;
+  name: string;
+};
+
+export type AssignmentSubmission = {
+  id: number;
+  assignment_id: number;
+  student_id: number;
+  file?: File[];
+  total_mark: number;
+  mark_in_percentage: number;
+  graded_by: number;
+  remark: string;
+  submitted_at: string;
+  created_at: string;
+  updated_at: string;
+  assignment: Assignments;
+  student: Student;
+};
+
+export type UpdateAssigmentSubmission = {
+  id: number;
+  total_mark: number;
+  mark_in_percentage: number;
+  graded_by: number;
+  remark: string;
+};
