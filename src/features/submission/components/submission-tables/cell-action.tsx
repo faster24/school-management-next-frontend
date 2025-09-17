@@ -1,11 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Assignments } from '@/types/school-index';
 import { IconDotsVertical } from '@tabler/icons-react';
@@ -13,39 +13,36 @@ import { Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface SubmissionCellActionProps {
-  data: Assignments;
-  submittedAssignments: (number | string)[];
+    data: Assignments;
 }
 
 export const SubmissionCellAction: React.FC<SubmissionCellActionProps> = ({
-  data,
-  submittedAssignments
+    data,
 }) => {
-  const router = useRouter();
+    const router = useRouter();
 
-  const handleSubmitClick = () => {
-    router.push(`/dashboard/submission/${data.id}`);
-  };
+    const handleSubmitClick = () => {
+        router.push(`/dashboard/submission/${data.id}`);
+    };
 
-  return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='h-8 w-8 p-0'>
-          <span className='sr-only'>Open menu</span>
-          <IconDotsVertical className='h-4 w-4' />
-        </Button>
-      </DropdownMenuTrigger>
+    return (
+        <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='h-8 w-8 p-0'>
+                    <span className='sr-only'>Open menu</span>
+                    <IconDotsVertical className='h-4 w-4' />
+                </Button>
+            </DropdownMenuTrigger>
 
-      <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuContent align='end'>
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-        <DropdownMenuItem
-          disabled={submittedAssignments.includes(data.id)}
-          onClick={handleSubmitClick}
-        >
-          <Send className='mr-2 h-4 w-4' /> Submit
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+                <DropdownMenuItem
+                    onClick={handleSubmitClick}
+                >
+                    <Send className='mr-2 h-4 w-4' /> Submit
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
 };

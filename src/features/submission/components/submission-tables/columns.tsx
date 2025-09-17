@@ -8,33 +8,18 @@ import { SubmissionStatus } from '../submission-status';
 import { getAssignments } from '@/services/assignment.services';
 
 export const submissionColumns: ColumnDef<Assignments>[] = [
-  { accessorKey: 'id', header: 'ID' },
-  { accessorKey: 'title', header: 'Title' },
-  { accessorKey: 'description', header: 'Description' },
-  { accessorKey: 'assignment_date', header: 'Assignment Date' },
-  { accessorKey: 'due_date', header: 'Due Date' },
-  { accessorKey: 'given_marks', header: 'Given Marks' },
-  {
-    accessorKey: 'Status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <SubmissionStatus
-        assignmentId={row.original.id}
-        submittedAssignments={row.original.submissions.map(
-          (submission) => submission.assignment_id
-        )}
-      />
-    )
-  },
-  {
-    id: 'Submit',
-    cell: ({ row }) => (
-      <SubmissionCellAction
-        data={row.original}
-        submittedAssignments={row.original.submissions.map(
-          (submission) => submission.assignment_id
-        )}
-      />
-    )
-  }
+    { accessorKey: 'id', header: 'ID' },
+    { accessorKey: 'title', header: 'Title' },
+    { accessorKey: 'description', header: 'Description' },
+    { accessorKey: 'assignment_date', header: 'Assignment Date' },
+    { accessorKey: 'due_date', header: 'Due Date' },
+    { accessorKey: 'given_marks', header: 'Given Marks' },
+    {
+        id: 'Submit',
+        cell: ({ row }) => (
+            <SubmissionCellAction
+                data={row.original}
+            />
+        )
+    }
 ];

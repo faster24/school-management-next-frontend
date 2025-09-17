@@ -3,30 +3,47 @@ import { assignmentColumns } from './assignment-tables/columns';
 import { Subjects, Assignments } from '@/types/school-index';
 import { AssignmentTable } from './assignment-tables';
 import { getSubjects } from '@/services/subject.services';
-import { getAssignments } from '@/services/assignment.services';
+import { getAssignments, getAssignmentsByTeacherId, getAssignmentsByStudentId } from '@/services/assignment.services';
 type AssignmentsListingPage = {};
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 
-export default async function AssignmentsListingPage({}: AssignmentsListingPage) {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+export default async function AssignmentsListingPage({ }: AssignmentsListingPage) {
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
+    const session = await getServerSession(authOptions);
 
-  const assignments: Assignments[] = await getAssignments();
+    if (!session) {
+        return <p>You must be logged in to view subjects</p>;
+    }
 
-  return (
-    <AssignmentTable
-      data={assignments}
-      totalItems={assignments.length}
-      columns={assignmentColumns}
-    />
-  );
+    const page = searchParamsCache.get('page');
+    const search = searchParamsCache.get('name');
+    const pageLimit = searchParamsCache.get('perPage');
+    const categories = searchParamsCache.get('category');
+
+    const filters = {
+        page,
+        limit: pageLimit,
+        ...(search && { search }),
+        ...(categories && { categories: categories })
+    };
+
+    let assignments: Assignments[] = [];
+
+    if (session.role === 'admin') {
+        assignments = await getAssignments();
+    } else if (session.role === 'teacher') {
+        assignments = await getAssignmentsByTeacherId(session.id);
+    }
+    else {
+        assignments = await getAssignmentsByStudentId(session.id);
+    }
+
+    return (
+        <AssignmentTable
+            data={assignments}
+            totalItems={assignments.length}
+            columns={assignmentColumns}
+        />
+    );
 }

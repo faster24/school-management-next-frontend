@@ -19,6 +19,15 @@ export const getTeacherSubjects = async (id: number): Promise<Subjects[]> => {
     return res.data;
 };
 
+export const getClientTeacherSubjects = async (id: number): Promise<Subjects[]> => {
+    const res = await apiRequest({
+        method: 'get',
+        url: `/teacher-subjects/${id}`,
+        server: false
+    });
+    return res.data;
+};
+
 export const getClientSubjects = async (): Promise<Subjects[]> => {
     const res = await apiRequest({
         method: 'get',
