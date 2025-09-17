@@ -28,7 +28,6 @@ interface ComboboxProps {
 
 export function Combobox({ value, onChange, data }: ComboboxProps) {
     const [open, setOpen] = React.useState(false);
-    console.log('data >>>>>', data)
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

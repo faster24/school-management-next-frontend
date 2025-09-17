@@ -4,19 +4,28 @@ import { CreateSubject, Subjects } from '@/types/school-index';
 export const getSubjects = async (): Promise<Subjects[]> => {
     const res = await apiRequest({
         method: 'get',
-        url: '/subjects',
+        url: `/subjects`,
+        server: true
+    });
+    return res.data;
+};
+
+export const getTeacherSubjects = async (id: number): Promise<Subjects[]> => {
+    const res = await apiRequest({
+        method: 'get',
+        url: `/teacher-subjects/${id}`,
         server: true
     });
     return res.data;
 };
 
 export const getClientSubjects = async (): Promise<Subjects[]> => {
-  const res = await apiRequest({
-    method: 'get',
-    url: '/subjects',
-    server: false
-  });
-  return res.data;
+    const res = await apiRequest({
+        method: 'get',
+        url: '/subjects',
+        server: false
+    });
+    return res.data;
 };
 
 export const createSubject = async (
@@ -67,8 +76,6 @@ export const deleteSubject = async (id: number): Promise<boolean> => {
         method: 'delete',
         url: `/subjects/${id}`
     });
-
-    console.log(res);
 
     if (res.data) {
         return true;
