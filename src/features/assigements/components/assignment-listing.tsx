@@ -19,13 +19,11 @@ export default async function AssignmentsListingPage({ }: AssignmentsListingPage
     const page = searchParamsCache.get('page');
     const search = searchParamsCache.get('name');
     const pageLimit = searchParamsCache.get('perPage');
-    const categories = searchParamsCache.get('category');
 
     const filters = {
         page,
         limit: pageLimit,
         ...(search && { search }),
-        ...(categories && { categories: categories })
     };
 
     let assignments: Assignments[] = [];

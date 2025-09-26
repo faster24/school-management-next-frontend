@@ -8,39 +8,39 @@ import { Text } from 'lucide-react';
 import { LabCellAction } from './cell-action';
 
 export const labColumns: ColumnDef<Labs>[] = [
-  {
-    id: 'name',
-    accessorKey: 'name',
-    header: ({ column }: { column: Column<Labs, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Name' />
-    ),
-    cell: ({ cell }) => <div>{cell.getValue<Labs['name']>()}</div>,
-    meta: {
-      label: 'Name',
-      placeholder: 'Search Labs...',
-      variant: 'text',
-      icon: Text
+    {
+        id: 'name',
+        accessorKey: 'name',
+        header: ({ column }: { column: Column<Labs, unknown> }) => (
+            <DataTableColumnHeader column={column} title='Name' />
+        ),
+        cell: ({ cell }) => <div>{cell.getValue<Labs['name']>()}</div>,
+        meta: {
+            label: 'Name',
+            placeholder: 'Search Labs...',
+            variant: 'text',
+            icon: Text
+        },
+        enableColumnFilter: true
     },
-    enableColumnFilter: true
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ cell }) => (
-      <div
-        className='max-w-sm truncate'
-        title={cell.getValue<Assignments['description']>()}
-      >
-        {cell.getValue<Assignments['description']>()}
-      </div>
-    )
-  },
-  {
-    accessorKey: 'file',
-    header: 'File'
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <LabCellAction data={row.original} />
-  }
+    {
+        accessorKey: 'description',
+        header: 'Description',
+        cell: ({ cell }) => (
+            <div
+                className='max-w-sm truncate'
+                title={cell.getValue<Assignments['description']>()}
+            >
+                {cell.getValue<Assignments['description']>()}
+            </div>
+        )
+    },
+    {
+        accessorKey: 'file',
+        header: 'File'
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <LabCellAction data={row.original} />
+    }
 ];

@@ -7,37 +7,40 @@ import { UserManagementCellAction } from './cell-action';
 import { formatDate } from '@/lib/format';
 
 export const userManagementColumns: ColumnDef<User>[] = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'email', header: 'Email' },
-  { accessorKey: 'phone', header: 'Phone' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'birth_date', header: 'Birth Date' },
-  {
-    accessorKey: 'role',
-    header: 'Role',
-    cell: ({ row }) => {
-      const roles = row.original.roles;
-      return (
-        <div className='text-green-400 capitalize'>
-          {roles?.length ? roles[0].name : 'No Role'}
-        </div>
-      );
+    { accessorKey: 'name', header: 'Name', id: 'name', enableColumnFilter: true },
+    { accessorKey: 'email', header: 'Email' },
+    { accessorKey: 'phone', header: 'Phone' },
+    { accessorKey: 'address', header: 'Address' },
+    { accessorKey: 'birth_date', header: 'Birth Date' },
+    {
+        id: 'role',
+        header: 'Role',
+        enableColumnFilter: true,
+        meta: {
+            variant: 'select',
+            label: 'Role',
+            options: [
+                { label: 'Admin', value: 'admin' },
+                { label: 'Student', value: 'student' },
+                { label: 'Teacher', value: 'teacher' },
+            ],
+        },
+        cell: ({ row }) => row.original.roles?.[0]?.name ?? 'No Role',
+    },
+    {
+        accessorKey: 'created_at',
+        header: 'Created at',
+        cell: ({ cell }) => (
+            <div
+                className='max-w-sm truncate'
+                title={cell.getValue<User['created_at']>()}
+            >
+                {formatDate(cell.getValue<User['created_at']>())}
+            </div>
+        )
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <UserManagementCellAction data={row.original} />
     }
-  },
-  {
-    accessorKey: 'created_at',
-    header: 'Created at',
-    cell: ({ cell }) => (
-      <div
-        className='max-w-sm truncate'
-        title={cell.getValue<User['created_at']>()}
-      >
-        {formatDate(cell.getValue<User['created_at']>())}
-      </div>
-    )
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <UserManagementCellAction data={row.original} />
-  }
 ];

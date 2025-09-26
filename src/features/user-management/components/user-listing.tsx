@@ -5,27 +5,25 @@ import { userManagementColumns } from './user-tables/columns';
 import { getUsers } from '@/services/user.services';
 type UserListingPage = {};
 
-export default async function UserListingPage({}: UserListingPage) {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+export default async function UserListingPage({ }: UserListingPage) {
+    const page = searchParamsCache.get('page');
+    const search = searchParamsCache.get('name');
+    const pageLimit = searchParamsCache.get('perPage');
+    const filters = {
+        page,
+        limit: pageLimit,
+        ...(search && { search }),
+    };
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
+    console.log(search)
 
-  const users: User[] = await getUsers();
+    const users: User[] = await getUsers(filters);
 
-  return (
-    <UserManagementTable
-      data={users}
-      totalItems={users.length}
-      columns={userManagementColumns}
-    />
-  );
+    return (
+        <UserManagementTable
+            data={users}
+            totalItems={users.length}
+            columns={userManagementColumns}
+        />
+    );
 }

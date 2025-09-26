@@ -7,26 +7,24 @@ import { eventColumns } from './event-tables/columns';
 import { getEvents } from '@/services/event.services';
 
 export default async function EventListingPage() {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+    // Showcasing the use of search params cache in nested RSCs
+    const page = searchParamsCache.get('page');
+    const search = searchParamsCache.get('name');
+    const pageLimit = searchParamsCache.get('perPage');
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
+    const filters = {
+        page,
+        limit: pageLimit,
+        ...(search && { search }),
+    };
 
-  const events: Events[] = await getEvents();
+    const events: Events[] = await getEvents();
 
-  return (
-    <EventTable
-      data={events}
-      totalItems={events.length}
-      columns={eventColumns}
-    />
-  );
+    return (
+        <EventTable
+            data={events}
+            totalItems={events.length}
+            columns={eventColumns}
+        />
+    );
 }

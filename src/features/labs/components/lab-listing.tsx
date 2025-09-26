@@ -5,20 +5,18 @@ import { labColumns } from './lab-tables/columns';
 import { getLabs } from '@/services/lab.services';
 
 export default async function LabListingPage() {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+    // Showcasing the use of search params cache in nested RSCs
+    const page = searchParamsCache.get('page');
+    const search = searchParamsCache.get('name');
+    const pageLimit = searchParamsCache.get('perPage');
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
+    const filters = {
+        page,
+        limit: pageLimit,
+        ...(search && { search }),
+    };
 
-  const labs: Labs[] = await getLabs();
+    const labs: Labs[] = await getLabs();
 
-  return <LabTable data={labs} totalItems={labs.length} columns={labColumns} />;
+    return <LabTable data={labs} totalItems={labs.length} columns={labColumns} />;
 }

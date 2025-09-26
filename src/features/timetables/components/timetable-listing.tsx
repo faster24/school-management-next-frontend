@@ -5,27 +5,25 @@ import { Timetable } from '@/types/school-index';
 import { getTimetables } from '@/services/timetable.services';
 type TimetableListingPage = {};
 
-export default async function TimetableListingPage({}: TimetableListingPage) {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+export default async function TimetableListingPage({ }: TimetableListingPage) {
+    // Showcasing the use of search params cache in nested RSCs
+    const page = searchParamsCache.get('page');
+    const search = searchParamsCache.get('name');
+    const pageLimit = searchParamsCache.get('perPage');
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
+    const filters = {
+        page,
+        limit: pageLimit,
+        ...(search && { search }),
+    };
 
-  const timetable: Timetable[] = await getTimetables();
+    const timetable: Timetable[] = await getTimetables();
 
-  return (
-    <TimetableTable
-      data={timetable}
-      totalItems={timetable.length}
-      columns={timetableColumns}
-    />
-  );
+    return (
+        <TimetableTable
+            data={timetable}
+            totalItems={timetable.length}
+            columns={timetableColumns}
+        />
+    );
 }

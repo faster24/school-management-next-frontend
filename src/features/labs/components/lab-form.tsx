@@ -1,6 +1,6 @@
 'use client';
 
-import { FileUploader } from '@/components/file-uploader';
+import { createLab, updateLab } from '@/services/lab.services';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -12,7 +12,6 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { createLab } from '@/services/lab.services';
 import { Labs } from '@/types/school-index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -29,6 +28,8 @@ const formSchema = z.object({
     file: z.any().nullable()
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 export default function LabForm({
     initialData,
     pageTitle
@@ -38,28 +39,33 @@ export default function LabForm({
 }) {
     const router = useRouter();
     const isEdit = !!initialData;
-    const defaultValues = {
+
+    const defaultValues: FormValues = {
         name: initialData?.name || '',
         description: initialData?.description || '',
         file: initialData?.file || null
     };
 
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         values: defaultValues
     });
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: FormValues) {
         try {
             let isSuccess = false;
 
             if (isEdit) {
-                // isSuccess = await editAssignment(initialData.id, formData);
+                isSuccess = await updateLab({
+                    id: initialData!.id,
+                    lab: values
+                });
             } else {
                 isSuccess = await createLab(values);
             }
+
             if (isSuccess) {
-                form.reset();
+                form.reset(defaultValues);
                 router.push('/dashboard/labs');
             }
         } catch (err) {
@@ -120,6 +126,11 @@ export default function LabForm({
                                         />
                                     </FormControl>
                                     <FormMessage />
+                                    {isEdit && initialData?.file && (
+                                        <p className="text-sm text-muted-foreground">
+                                            Current File: **{initialData.file.split('/').pop()}**
+                                        </p>
+                                    )}
                                 </FormItem>
                             )}
                         />

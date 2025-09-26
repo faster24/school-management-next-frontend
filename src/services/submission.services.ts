@@ -1,99 +1,100 @@
 import { apiRequest } from '@/lib/apiRequest';
 import {
-  Assignments,
-  AssignmentSubmission,
-  Submission,
-  UpdateAssigmentSubmission
+    Assignments,
+    AssignmentSubmission,
+    Submission,
+    UpdateAssigmentSubmission
 } from '@/types/school-index';
 
 //Student submission
 export const submitAssignment = async (
-  assignment: Submission
+    assignment: Submission
 ): Promise<boolean> => {
-  const res = await apiRequest({
-    method: 'post',
-    url: '/submissions',
-    data: assignment,
-    server: false
-  });
-  return !!res; // Simplified boolean conversion
+    const res = await apiRequest({
+        method: 'post',
+        url: '/submissions',
+        data: assignment,
+        server: false
+    });
+    return !!res; // Simplified boolean conversion
 };
 
 export const getSubmissionById = async (id: number): Promise<Submission> => {
-  const res = await apiRequest({
-    method: 'get',
-    url: `/submissions/${id}`,
-    server: true
-  });
-  return res; // Changed from res.data
+    const res = await apiRequest({
+        method: 'get',
+        url: `/submissions/${id}`,
+        server: true
+    });
+    return res; // Changed from res.data
 };
 
 export const getAssignmentById = async (id: number): Promise<Assignments> => {
-  const res = await apiRequest({
-    method: 'get',
-    url: `/assignments/${id}`,
-    server: false
-  });
-  return res.data; // Changed from res.data
+    const res = await apiRequest({
+        method: 'get',
+        url: `/assignments/${id}`,
+        server: false
+    });
+    return res.data; // Changed from res.data
 };
 
 export const createSubmission = async (v: Submission): Promise<Submission> => {
-  const res = await apiRequest({
-    method: 'post',
-    url: '/submissions',
-    data: v,
-    server: false
-  });
-  return res.data;
+    const res = await apiRequest({
+        method: 'post',
+        url: '/submissions',
+        data: v,
+        server: false
+    });
+    return res.data;
 };
 
 //Teacher -> get submission
 export const getAssignmentSubmissions = async (): Promise<
-  AssignmentSubmission[]
+    AssignmentSubmission[]
 > => {
-  const res = await apiRequest({
-    method: 'get',
-    url: '/submissions',
-    server: true
-  });
-  return res.data.data;
+    const res = await apiRequest({
+        method: 'get',
+        url: '/submissions',
+        server: true
+    });
+    return res.data.data;
 };
 
 export const getAssignmentSubmissionsById = async (
-  id: number
+    id: number
 ): Promise<AssignmentSubmission> => {
-  const res = await apiRequest({
-    method: 'get',
-    url: `/submissions/${id}`,
-    server: true
-  });
-  return res.data;
+    const res = await apiRequest({
+        method: 'get',
+        url: `/submissions/${id}`,
+        server: true
+    });
+    return res.data;
 };
 
 //Here the PUT and DELETE method need to fix or something
 export const updateAssigmentSubmission = async (
-  v: UpdateAssigmentSubmission
+    v: UpdateAssigmentSubmission, id: number
 ): Promise<boolean> => {
-  const res = await apiRequest({
-    method: 'post',
-    url: `/submissions/${v.id}`,
-    server: false
-  });
+    const res = await apiRequest({
+        method: 'post',
+        url: `/submissions/${id}`,
+        data: v,
+        server: false
+    });
 
-  if (res.success) {
-    return true;
-  }
-  return false;
+    if (res.success) {
+        return true;
+    }
+    return false;
 };
 
 export const deleteSubmission = async (id: number): Promise<boolean> => {
-  const res = await apiRequest({
-    method: 'post',
-    url: `/submissions/${id}`,
-    server: false
-  });
-  if (res.success) {
-    return true;
-  }
-  return false;
+    const res = await apiRequest({
+        method: 'post',
+        url: `/submissions/${id}`,
+        server: false
+    });
+    if (res.success) {
+        return true;
+    }
+    return false;
 };

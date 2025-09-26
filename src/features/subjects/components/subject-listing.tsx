@@ -15,7 +15,6 @@ export default async function SubjectListingPage({ }: SubjectListingPage) {
         return <p>You must be logged in to view subjects</p>;
     }
 
-
     const page = searchParamsCache.get('page');
     const search = searchParamsCache.get('name');
     const pageLimit = searchParamsCache.get('perPage');
