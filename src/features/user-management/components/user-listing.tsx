@@ -15,8 +15,6 @@ export default async function UserListingPage({ }: UserListingPage) {
         ...(search && { search }),
     };
 
-    console.log(search)
-
     const users: User[] = await getUsers(filters);
 
     return (

@@ -22,8 +22,6 @@ import * as z from 'zod';
 import { createUser, editUser } from '@/services/user.services';
 import { DatePicker } from '@/components/date-picker';
 import { formatDate } from '@/lib/utils';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/authOptions';
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -47,18 +45,35 @@ const formSchema = z.object({
         message: 'Role must be at least 2 characters.'
     }),
     year_id: z.number().nullable()
+}).superRefine((data, ctx) => {
+    if (data.role === 'student' && (!data.year_id || data.year_id === 0)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Year is required for students.',
+            path: ['year_id'],
+        });
+    }
+
+    if (data.role === 'teacher' && (!data.quallification || data.quallification.trim() === '')) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Qualification is required for teachers.',
+            path: ['quallification'],
+        });
+    }
 });
 
 
-export default async function UserForm({
+export default function UserForm({
     initialData,
-    pageTitle
+    pageTitle,
+    session
 }: {
     initialData: User | null;
     pageTitle: string;
+    session: any;
 }) {
 
-    const session = await getServerSession(authOptions);
     const router = useRouter();
     const isEdit = !!initialData;
 
@@ -95,6 +110,10 @@ export default async function UserForm({
         fetchYears();
     }, []);
 
+    const currentRole = form.watch('role');
+    const isStudent = currentRole === 'student';
+    const isTeacher = currentRole === 'teacher';
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const data: CreateUser = {
             name: values.name,
@@ -107,7 +126,7 @@ export default async function UserForm({
             address: values.address,
             user_image: values.user_image,
             role: values.role,
-            year_id: values.year_id
+            year_id: isStudent ? values.year_id : null
         };
         if (isEdit) {
             const isSuccess = await editUser({
@@ -295,55 +314,60 @@ export default async function UserForm({
                             />
                         </div>
                         <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                            <FormField
-                                control={form.control}
-                                name='quallification'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Quallification</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder='Enter user quallification'
-                                                className='resize-none'
-                                                {...field}
-                                                value={field.value ?? ''}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>
-                                            This input is optional for student.
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name='year_id'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Year</FormLabel>
-                                        <FormControl>
-                                            <select
-                                                {...field}
-                                                value={field.value ?? ''}
-                                                onChange={(e) => field.onChange(Number(e.target.value))}
-                                                className='w-full rounded border p-2'
-                                            >
-                                                <option value=''>Select a year</option>
-                                                {years.map((year) => (
-                                                    <option key={year.id} value={year.id}>
-                                                        {year.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </FormControl>
-                                        <FormDescription>
-                                            This input is optional for teacher and admin.
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            {isTeacher && (
+                                <FormField
+                                    control={form.control}
+                                    name='quallification'
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Qualification</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder='Enter user qualification'
+                                                    className='resize-none'
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                This input is required for teachers.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+
+                            {isStudent && (
+                                <FormField
+                                    control={form.control}
+                                    name='year_id'
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Year</FormLabel>
+                                            <FormControl>
+                                                <select
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                                    className='w-full rounded border p-2'
+                                                >
+                                                    <option value=''>Select a year</option>
+                                                    {years.map((year) => (
+                                                        <option key={year.id} value={year.id}>
+                                                            {year.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </FormControl>
+                                            <FormDescription>
+                                                This input is required for students.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
                         </div>
 
                         <Button type='submit' disabled={years.length === 0}>
