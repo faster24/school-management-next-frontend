@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -32,16 +33,16 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
-    total_mark: z.number(),
-    mark_in_percentage: z.number(),
-    remark: z.string({ message: 'Remark is required.' })
+    total_mark: z.number().min(0, 'Total mark cannot be negative.'), // Added simple validation
+    mark_in_percentage: z.number().min(0).max(100, 'Percentage must be between 0 and 100.'), // Added simple validation
+    remark: z.string().min(1, 'Remark is required.')
 });
 
 export default function AssignmentSubmissionForm({
     initialData,
     pageTitle
 }: {
-    initialData: AssignmentSubmission | null;
+    initialData: any;
     pageTitle: string;
 }) {
     const { data: session, status } = useSession();
@@ -50,7 +51,11 @@ export default function AssignmentSubmissionForm({
 
     const isEdit = !!initialData;
 
-    console.log('initial data >> ', initialData)
+    const assignmentMedia = initialData?.assignment?.media?.[0];
+
+    const fileUrl = assignmentMedia?.original_url;
+    console.log('initial', initialData)
+    const fileName = assignmentMedia?.file_name;
 
     const defaultValues = {
         total_mark: initialData?.total_mark ?? 0,
@@ -68,18 +73,19 @@ export default function AssignmentSubmissionForm({
             id: initialData?.id!,
             mark_in_percentage: values.mark_in_percentage,
             remark: values.remark,
-            total_mark: values.total_mark
+            total_mark: values.total_mark,
+            graded_by: session?.user?.id,
         };
         try {
             if (isEdit) {
-                const res = await updateAssigmentSubmission(data, initialData.id);
+                const res = await updateAssigmentSubmission(data, initialData.id!);
                 if (res) {
-                    form.reset();
+                    form.reset(values); // Reset with current values, not default
                     router.push('/dashboard/assignments-submission');
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error('Submission update error:', error);
         }
     }
 
@@ -94,6 +100,25 @@ export default function AssignmentSubmissionForm({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                         <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+
+                            {fileUrl && (
+                                <FormItem className='flex flex-col'>
+                                    <FormLabel>Assignment File</FormLabel>
+                                    <FormControl>
+                                        <a
+                                            href={fileUrl}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            // Added some Tailwind classes for styling the link
+                                            className='block w-fit text-blue-600 underline hover:text-blue-800 transition-colors pt-2'
+                                        >
+                                            {fileName || 'View Attached File'} 📄
+                                        </a>
+                                    </FormControl>
+                                    {/* <FormDescription>Click to view the original assignment file.</FormDescription> */}
+                                </FormItem>
+                            )}
+
                             <FormField
                                 control={form.control}
                                 name='total_mark'
@@ -104,8 +129,9 @@ export default function AssignmentSubmissionForm({
                                             <Input
                                                 placeholder='Total mark'
                                                 {...field}
-                                                type='text'
+                                                type='number' // Changed to number input
                                                 value={field.value ?? ''}
+                                                // Convert string input back to number for RHF
                                                 onChange={(e) => field.onChange(Number(e.target.value))}
                                             />
                                         </FormControl>
@@ -122,9 +148,10 @@ export default function AssignmentSubmissionForm({
                                         <FormControl>
                                             <Input
                                                 placeholder='Mark in percentage'
-                                                type='text'
+                                                type='number' // Changed to number input
                                                 {...field}
                                                 value={field.value ?? ''}
+                                                // Convert string input back to number for RHF
                                                 onChange={(e) => field.onChange(Number(e.target.value))}
                                             />
                                         </FormControl>
@@ -139,7 +166,7 @@ export default function AssignmentSubmissionForm({
                                     <FormItem>
                                         <FormLabel>Remark</FormLabel>
                                         <FormControl>
-                                            <Input type='text' placeholder='Given marks' {...field} />
+                                            <Input type='text' placeholder='Add remark/feedback' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -147,7 +174,7 @@ export default function AssignmentSubmissionForm({
                             />
                         </div>
                         <Button type='submit' className='cursor-pointer'>
-                            {isEdit ? 'Update' : 'Create'} Assignment
+                            {isEdit ? 'Update Grade' : 'Create'}
                         </Button>
                     </form>
                 </Form>

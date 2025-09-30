@@ -32,7 +32,7 @@ export function AssignmentTable<TData, TValue>({
 
     return (
         <DataTable table={table}>
-            <DataTableToolbar table={table} />
+            <DataTableToolbar table={table} searchColumnId='title' />
         </DataTable>
     );
 }

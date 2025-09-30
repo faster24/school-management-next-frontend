@@ -136,14 +136,6 @@ export const adminNavItems: NavItem[] = [
         items: [] // Empty array as there are no child items for Dashboard
     },
     {
-        title: 'Attendance',
-        url: '/dashboard/attendances',
-        icon: 'presentation',
-        isActive: false,
-        shortcut: ['d', 'd'],
-        items: [] // Empty array as there are no child items for Dashboard
-    },
-    {
         title: 'Subjects',
         url: '/dashboard/subjects',
         icon: 'syllabus',
@@ -202,11 +194,11 @@ export const teacherNavItems: NavItem[] = [
         items: [] // Empty array as there are no child items for Dashboard
     },
     {
-        title: 'Attendance',
-        url: '/dashboard/attendances',
-        icon: 'presentation',
+        title: 'Assignments Submission',
+        url: '/dashboard/assignments-submission',
+        icon: 'table',
         isActive: false,
-        shortcut: ['d', 'd'],
+        shortcut: ['d', 'a'],
         items: [] // Empty array as there are no child items for Dashboard
     },
     {

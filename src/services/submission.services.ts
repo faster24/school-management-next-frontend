@@ -38,6 +38,7 @@ export const getAssignmentById = async (id: number): Promise<Assignments> => {
 };
 
 export const createSubmission = async (v: Submission): Promise<Submission> => {
+    console.log('v', v)
     const res = await apiRequest({
         method: 'post',
         url: '/submissions',
@@ -47,13 +48,12 @@ export const createSubmission = async (v: Submission): Promise<Submission> => {
     return res.data;
 };
 
-//Teacher -> get submission
-export const getAssignmentSubmissions = async (): Promise<
+export const getAssignmentSubmissions = async (id: number): Promise<
     AssignmentSubmission[]
 > => {
     const res = await apiRequest({
         method: 'get',
-        url: '/submissions',
+        url: `/submissions?teacher_id=${id}`,
         server: true
     });
     return res.data.data;

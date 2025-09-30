@@ -30,6 +30,7 @@ export const getAssignmentsByStudentId = async (id: number): Promise<Assignments
         url: `/assignments/${id}/student`,
         server: true
     });
+
     return res.data; // Changed from res.data
 };
 
@@ -74,7 +75,6 @@ export const getCategory = async (): Promise<Category[]> => {
     return res.data; // Changed from res.data
 };
 
-//Student submission
 export const submitAssignment = async (
     assignment: Submission
 ): Promise<boolean> => {

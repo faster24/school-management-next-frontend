@@ -50,7 +50,7 @@ export function DataTableToolbar<TData>({
             <div className='flex flex-1 flex-wrap items-center gap-2'>
                 {searchColumn && (
                     <Input
-                        placeholder={`Search ${String(searchColumn.columnDef.header)}...`}
+                        placeholder={`Search...`}
                         value={(searchColumn.getFilterValue() as string) ?? ''}
                         onChange={(event) => searchColumn.setFilterValue(event.target.value)}
                         className='h-8 w-40 lg:w-56'

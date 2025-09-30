@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -9,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Assignments } from '@/types/school-index';
 import { IconDotsVertical } from '@tabler/icons-react';
-import { Send } from 'lucide-react';
+import { Check, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface SubmissionCellActionProps {
@@ -19,6 +20,7 @@ interface SubmissionCellActionProps {
 export const SubmissionCellAction: React.FC<SubmissionCellActionProps> = ({
     data,
 }) => {
+    console.log(data);
     const router = useRouter();
 
     const handleSubmitClick = () => {
@@ -37,11 +39,18 @@ export const SubmissionCellAction: React.FC<SubmissionCellActionProps> = ({
             <DropdownMenuContent align='end'>
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                <DropdownMenuItem
-                    onClick={handleSubmitClick}
-                >
-                    <Send className='mr-2 h-4 w-4' /> Submit
-                </DropdownMenuItem>
+                {/* Conditional rendering based on submission status */}
+                {data.is_submitted ? (
+                    <DropdownMenuItem disabled>
+                        <Check className='mr-2 h-4 w-4' />
+                        Submitted
+                    </DropdownMenuItem>
+                ) : (
+                    <DropdownMenuItem onClick={handleSubmitClick}>
+                        <Send className='mr-2 h-4 w-4' />
+                        Submit
+                    </DropdownMenuItem>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );

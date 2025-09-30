@@ -32,7 +32,6 @@ export default async function SubmissionListingPage({ }: SubmissionListingPage) 
     }
     else {
         assignments = await getAssignmentsByStudentId(session.id);
-        console.log('student >> ', assignments)
     }
 
     return (

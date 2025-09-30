@@ -18,13 +18,11 @@ export default async function SubjectListingPage({ }: SubjectListingPage) {
     const page = searchParamsCache.get('page');
     const search = searchParamsCache.get('name');
     const pageLimit = searchParamsCache.get('perPage');
-    const categories = searchParamsCache.get('category');
 
     const filters = {
         page,
         limit: pageLimit,
         ...(search && { search }),
-        ...(categories && { categories }),
     };
 
     let subjects: Subjects[] = [];

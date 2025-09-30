@@ -7,43 +7,40 @@ import { Column } from '@tanstack/react-table';
 import { Text } from 'lucide-react';
 
 export const subjectColumns: ColumnDef<Subjects>[] = [
-  {
-    id: 'name',
-    accessorKey: 'name',
-    header: ({ column }: { column: Column<Subjects, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Name' />
-    ),
-    cell: ({ cell }) => <div>{cell.getValue<Subjects['name']>()}</div>,
-    meta: {
-      label: 'Name',
-      placeholder: 'Search subjects...',
-      variant: 'text',
-      icon: Text
+    {
+        id: 'name',
+        accessorKey: 'name',
+        cell: ({ cell }) => <div>{cell.getValue<Subjects['name']>()}</div>,
+        meta: {
+            label: 'Name',
+            placeholder: 'Search subjects...',
+            variant: 'text',
+            icon: Text
+        },
+        enableColumnFilter: true
     },
-    enableColumnFilter: true
-  },
-  {
-    accessorKey: 'code',
-    header: 'Code'
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ cell }) => (
-      <div
-        className='max-w-sm truncate'
-        title={cell.getValue<Subjects['description']>()}
-      >
-        {cell.getValue<Subjects['description']>()}
-      </div>
-    )
-  },
-  {
-    accessorKey: 'is_active',
-    header: 'Is active'
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <SubjectCellAction data={row.original} />
-  }
+    {
+        accessorKey: 'code',
+        header: 'Code'
+    },
+    {
+        accessorKey: 'description',
+        header: 'Description',
+        cell: ({ cell }) => (
+            <div
+                className='max-w-sm truncate'
+                title={cell.getValue<Subjects['description']>()}
+            >
+                {cell.getValue<Subjects['description']>()}
+            </div>
+        )
+    },
+    {
+        accessorKey: 'is_active',
+        header: 'Is active'
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <SubjectCellAction data={row.original} />
+    }
 ];

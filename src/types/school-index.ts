@@ -190,6 +190,7 @@ export type AssignmentSubmission = {
     updated_at: string;
     assignment: Assignments;
     student: Student;
+    isSubmitted?: boolean;
 };
 
 export type UpdateAssigmentSubmission = {

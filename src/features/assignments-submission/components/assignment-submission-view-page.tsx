@@ -4,24 +4,24 @@ import AssignmentSubmissionForm from './assignment-submission-from';
 import { getAssignmentSubmissionsById } from '@/services/submission.services';
 
 type TAssignmentSubmissionViewPageProps = {
-  assignmentId: string;
+    assignmentId: string;
 };
 
 export default async function AssignmentSubmissionViewPage({
-  assignmentId
+    assignmentId
 }: TAssignmentSubmissionViewPageProps) {
-  let submission: AssignmentSubmission | null = null;
-  let pageTitle = 'Update Submission';
+    const submission = await getAssignmentSubmissionsById(Number(assignmentId));
+    let pageTitle = 'Update Submission';
 
-  if (assignmentId !== 'new') {
-    const data = await getAssignmentSubmissionsById(Number(assignmentId));
-    submission = data;
-    if (!submission) {
-      notFound();
+    if (assignmentId !== 'new') {
+        const submission = await getAssignmentSubmissionsById(Number(assignmentId));
+
+        if (!submission) {
+            notFound();
+        }
     }
-  }
 
-  return (
-    <AssignmentSubmissionForm initialData={submission} pageTitle={pageTitle} />
-  );
+    return (
+        <AssignmentSubmissionForm initialData={submission} pageTitle={pageTitle} />
+    );
 }
