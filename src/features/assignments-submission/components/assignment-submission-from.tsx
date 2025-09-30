@@ -51,7 +51,7 @@ export default function AssignmentSubmissionForm({
 
     const isEdit = !!initialData;
 
-    const assignmentMedia = initialData?.assignment?.media?.[0];
+    const assignmentMedia = initialData?.media?.[0];
 
     const fileUrl = assignmentMedia?.original_url;
     console.log('initial', initialData)
@@ -80,7 +80,7 @@ export default function AssignmentSubmissionForm({
             if (isEdit) {
                 const res = await updateAssigmentSubmission(data, initialData.id!);
                 if (res) {
-                    form.reset(values); // Reset with current values, not default
+                    form.reset(values);
                     router.push('/dashboard/assignments-submission');
                 }
             }
@@ -109,7 +109,6 @@ export default function AssignmentSubmissionForm({
                                             href={fileUrl}
                                             target='_blank'
                                             rel='noopener noreferrer'
-                                            // Added some Tailwind classes for styling the link
                                             className='block w-fit text-blue-600 underline hover:text-blue-800 transition-colors pt-2'
                                         >
                                             {fileName || 'View Attached File'} 📄

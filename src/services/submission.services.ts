@@ -37,11 +37,11 @@ export const getAssignmentById = async (id: number): Promise<Assignments> => {
     return res.data; // Changed from res.data
 };
 
-export const createSubmission = async (v: Submission): Promise<Submission> => {
-    console.log('v', v)
+export const createSubmission = async (v: FormData): Promise<Submission> => {
     const res = await apiRequest({
         method: 'post',
         url: '/submissions',
+        headers: { 'Content-Type': 'multipart/form-data' },
         data: v,
         server: false
     });
