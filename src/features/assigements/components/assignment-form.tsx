@@ -80,6 +80,7 @@ export default function AssignmentForm({
 
             let isSuccess = false;
             if (isEdit) {
+                // Logic for editing assignment will go here
             } else {
                 isSuccess = await createAssignment(data);
             }
@@ -93,10 +94,26 @@ export default function AssignmentForm({
         }
     }
 
-    // Fetch subjects and categories based on session
+    // NEW: Reusable function to fetch categories
+    const fetchCategories = async () => {
+        try {
+            const fetchedCategories = await getCategory();
+            setCategories(fetchedCategories);
+        } catch (err) {
+            console.error('Failed to fetch categories', err);
+        }
+    };
+
+    // NEW: Handler for closing the modal and re-fetching categories
+    const handleModalClose = () => {
+        setOpen(false);
+        // Re-fetch categories to update the combobox immediately
+        fetchCategories();
+    };
+
     useEffect(() => {
-        if (status === 'loading') return; // wait until session is ready
-        if (!session) return; // no session, do nothing
+        if (status === 'loading') return;
+        if (!session) return;
 
         const fetchData = async () => {
             try {
@@ -107,9 +124,9 @@ export default function AssignmentForm({
                     fetchedSubjects = await getClientSubjects();
                 }
 
-                const fetchedCategories = await getCategory();
+                // Initial fetch uses the new reusable function
+                await fetchCategories();
                 setSubjects(fetchedSubjects);
-                setCategories(fetchedCategories);
             } catch (err) {
                 console.error('Failed to fetch subjects or categories', err);
             }
@@ -117,6 +134,7 @@ export default function AssignmentForm({
 
         fetchData();
     }, [session, status]);
+
 
     return (
         <Card className='mx-auto w-full'>
@@ -266,7 +284,8 @@ export default function AssignmentForm({
                     </form>
                 </Form>
             </CardContent>
-            <CategoryModal isOpen={open} onClose={() => setOpen(false)} />
+            {/* UPDATED: Passing handleModalClose to trigger re-fetch on close */}
+            <CategoryModal isOpen={open} onClose={handleModalClose} />
         </Card>
     );
 }

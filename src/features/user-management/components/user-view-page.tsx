@@ -19,6 +19,8 @@ export default async function UserViewPage({ userId }: TUserViewPageProps) {
     if (userId !== 'new') {
         const data = await getUserById(Number(userId));
         user = data;
+
+        console.log(user)
         if (!user) {
             notFound();
         }

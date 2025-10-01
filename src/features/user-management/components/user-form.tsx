@@ -88,7 +88,7 @@ export default function UserForm({
         address: initialData?.address || '',
         user_image: initialData?.image_url || null,
         role: initialData?.roles[0]?.name || '',
-        year_id: initialData?.year_id || 0
+        year_id: initialData?.student_year?.year_id || 0
     };
 
     const form = useForm<z.infer<typeof formSchema>>({
