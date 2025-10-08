@@ -146,12 +146,7 @@ jobs:
           du -sh .next/
           
           # Cleanup
-          rm -rf /tmp/deployment /tmp/deployment.tar.gz
-          
-          # Install production dependencies only
-          echo "📥 Installing dependencies..."
-          npm ci --only=production --legacy-peer-deps
-                  
+          rm -rf /tmp/deployment /tmp/deployment.tar.gz        
           # Cleanup old backups (keep last 5)
           ls -t backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f
           
