@@ -48,7 +48,7 @@ export const createSubmission = async (v: FormData): Promise<Submission> => {
     return res.data;
 };
 
-export const getAssignmentSubmissions = async (id: number): Promise<
+export const getAssignmentSubmissions = async (id: any): Promise<
     AssignmentSubmission[]
 > => {
     const res = await apiRequest({

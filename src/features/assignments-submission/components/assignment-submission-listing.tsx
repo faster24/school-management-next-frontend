@@ -25,7 +25,7 @@ export default async function AssignmentSubmissionListingPage({ }: AssignmentSub
         ...(search && { search }),
     };
 
-    const assignmentsSubmission: AssignmentSubmission[] = await getAssignmentSubmissions(session.id);
+    const assignmentsSubmission: AssignmentSubmission[] = await getAssignmentSubmissions(session?.id || null);
 
     return (
         <AssignmentSubmissionTable
