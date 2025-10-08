@@ -73,7 +73,6 @@ export default function AssignmentSubmissionForm({
             mark_in_percentage: values.mark_in_percentage,
             remark: values.remark,
             total_mark: values.total_mark,
-            graded_by: session?.user?.id,
         };
         try {
             if (isEdit) {

@@ -203,7 +203,6 @@ export type AssignmentSubmission = {
 export type UpdateAssigmentSubmission = {
     id: number;
     total_mark: number;
-    graded_by: number;
     mark_in_percentage: number;
     remark: string;
 };
