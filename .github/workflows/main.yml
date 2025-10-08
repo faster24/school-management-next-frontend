@@ -25,14 +25,50 @@ jobs:
       run: npm ci
 
     - name: Build application
-      run: npm run build
+      run: |
+        echo "🏗️ Building application..."
+        npm run build
+        
+        # Debug: Check if .next folder was created
+        echo "🔍 Checking build output..."
+        ls -la
+        echo "📁 .next folder contents:"
+        ls -la .next/ || echo "❌ .next folder not found after build!"
 
     - name: Create deployment package
       run: |
-        mkdir -p deployment
-        cp -r .next/ next.config.ts tsconfig.json components.json postcss.config.js package.json package-lock.json public deployment/
-        tar -czf deployment.tar.gz deployment/
+        echo "📦 Creating deployment package..."
         
+        # Debug: Verify files exist before copying
+        echo "🔍 Files to be deployed:"
+        ls -la .next/ 2>/dev/null && echo "✅ .next exists" || echo "❌ .next missing"
+        ls -la public/ 2>/dev/null && echo "✅ public exists" || echo "❌ public missing"
+        ls -la package.json 2>/dev/null && echo "✅ package.json exists" || echo "❌ package.json missing"
+        
+        mkdir -p deployment
+        
+        # Debug: Copy with verbose output
+        echo "📤 Copying files to deployment folder..."
+        cp -rv .next/ deployment/ || echo "❌ Failed to copy .next"
+        cp -rv public/ deployment/ || echo "❌ Failed to copy public"
+        cp -v next.config.ts tsconfig.json components.json postcss.config.js package.json package-lock.json deployment/
+        
+        # Debug: Check deployment folder contents
+        echo "📋 Deployment folder contents:"
+        ls -la deployment/
+        echo "🔍 Checking if .next exists in deployment:"
+        ls -la deployment/.next/ 2>/dev/null && echo "✅ .next exists in deployment" || echo "❌ .next missing in deployment"
+        
+        # Create tar with verbose output
+        echo "🗜️ Creating tar archive..."
+        tar -czvf deployment.tar.gz deployment/
+        
+        # Debug: Check tar contents
+        echo "📋 Archive contents:"
+        tar -tzf deployment.tar.gz | grep "\.next" | head -10 || echo "❌ No .next files found in archive"
+        echo "Total files in archive:"
+        tar -tzf deployment.tar.gz | wc -l
+
     - name: Deploy to server
       uses: appleboy/scp-action@v0.1.3
       with:
@@ -44,7 +80,7 @@ jobs:
         port: 22
         timeout: 30s
 
-    - name: Extract and restart on server
+    - name: Debug server before extraction
       uses: appleboy/ssh-action@v0.1.6
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -53,19 +89,70 @@ jobs:
         script: |
           cd /var/www/dashboard
           
+          echo "🔍 Server state BEFORE extraction:"
+          echo "📂 Current directory:"
+          pwd
+          ls -la
+          echo "📦 Checking if tar file exists:"
+          ls -la /tmp/deployment.tar.gz && echo "✅ Tar file exists" || echo "❌ Tar file missing"
+          echo "📊 Tar file size:"
+          du -h /tmp/deployment.tar.gz
+
+    - name: Extract and restart on server
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          set -e  # Exit on error
+          cd /var/www/dashboard
+          
           # Backup current deployment
+          echo "💾 Creating backup..."
           tar -czf backup_$(date +%Y%m%d_%H%M%S).tar.gz ./* 2>/dev/null || true
           
-          # Extract new deployment
-          tar -xzf /tmp/deployment.tar.gz -C /tmp/
-          cp -r /tmp/deployment/* .
+          # Extract new deployment with verbose output
+          echo "📦 Extracting deployment..."
+          tar -xzvf /tmp/deployment.tar.gz -C /tmp/
+          
+          echo "🔍 Checking extracted files in /tmp/deployment:"
+          ls -la /tmp/deployment/ || echo "❌ /tmp/deployment folder missing"
+          echo "📁 Contents of /tmp/deployment:"
+          find /tmp/deployment -type f | head -15 || echo "No files found"
+          
+          # Copy files with verification
+          echo "📤 Copying files to app directory..."
+          cp -rv /tmp/deployment/* . || echo "❌ Copy failed"
+          
+          # Debug: Verify files after copy
+          echo "🔍 After copy - checking .next folder:"
+          ls -la .next/ 2>/dev/null && echo "✅ .next exists after copy" || echo "❌ .next missing after copy"
+          
+          if [ ! -d ".next" ]; then
+            echo "❌ CRITICAL: .next folder is missing!"
+            echo "📋 All files in current directory:"
+            find . -type f -name "*" | head -20
+            echo "🔍 Looking for any next-related files:"
+            find . -name "*next*" -type d 2>/dev/null || echo "No next folders found"
+            exit 1
+          fi
+          
+          echo "📁 .next folder structure:"
+          find .next -type f | head -10 || echo "No files in .next"
+          
+          # Cleanup
           rm -rf /tmp/deployment /tmp/deployment.tar.gz
           
           # Install production dependencies only
-          npm ci --only=production
+          echo "📥 Installing dependencies..."
+          npm ci --only=production --legacy-peer-deps
           
           # Restart application
+          echo "🔄 Restarting application..."
           sudo systemctl restart nextjs-app
           
           # Cleanup old backups (keep last 5)
           ls -t backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f
+          
+          echo "✅ Deployment completed successfully!"
