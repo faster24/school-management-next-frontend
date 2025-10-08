@@ -118,12 +118,14 @@ jobs:
           
           echo "🔍 Checking extracted files in /tmp/deployment:"
           ls -la /tmp/deployment/ || echo "❌ /tmp/deployment folder missing"
-          echo "📁 Contents of /tmp/deployment:"
-          find /tmp/deployment -type f | head -15 || echo "No files found"
           
-          # Copy files with verification
-          echo "📤 Copying files to app directory..."
-          cp -rv /tmp/deployment/* . || echo "❌ Copy failed"
+          # FIX: Copy ALL files including hidden ones
+          echo "📤 Copying files to app directory (including hidden files)..."
+          cp -r /tmp/deployment/.* . 2>/dev/null || true  # Copy hidden files/folders
+          cp -r /tmp/deployment/* .  # Copy non-hidden files
+          
+          # Alternative method: Use rsync for better reliability
+          # rsync -a /tmp/deployment/ ./
           
           # Debug: Verify files after copy
           echo "🔍 After copy - checking .next folder:"
@@ -131,15 +133,17 @@ jobs:
           
           if [ ! -d ".next" ]; then
             echo "❌ CRITICAL: .next folder is missing!"
-            echo "📋 All files in current directory:"
-            find . -type f -name "*" | head -20
-            echo "🔍 Looking for any next-related files:"
-            find . -name "*next*" -type d 2>/dev/null || echo "No next folders found"
+            echo "📋 All files (including hidden):"
+            ls -la
+            echo "🔍 Looking for .next specifically:"
+            find . -name ".next" -type d 2>/dev/null || echo "No .next folder found"
             exit 1
           fi
           
           echo "📁 .next folder structure:"
-          find .next -type f | head -10 || echo "No files in .next"
+          ls -la .next/
+          echo "📊 .next folder size:"
+          du -sh .next/
           
           # Cleanup
           rm -rf /tmp/deployment /tmp/deployment.tar.gz
@@ -147,11 +151,7 @@ jobs:
           # Install production dependencies only
           echo "📥 Installing dependencies..."
           npm ci --only=production --legacy-peer-deps
-          
-          # Restart application
-          echo "🔄 Restarting application..."
-          sudo systemctl restart nextjs-app
-          
+                  
           # Cleanup old backups (keep last 5)
           ls -t backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f
           
