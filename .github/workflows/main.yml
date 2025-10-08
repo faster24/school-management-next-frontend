@@ -33,6 +33,15 @@ jobs:
         cp -r .next next.config.ts tsconfig.json components.json postcss.config.js package.json package-lock.json public deployment/
         tar -czf deployment.tar.gz deployment/
 
+    - name: Setup SSH key
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+    - name: Test SSH connection
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "echo 'SSH connection successful'"
+
     - name: Deploy to server
       uses: appleboy/scp-action@v0.1.3
       with:
@@ -41,6 +50,8 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: "deployment.tar.gz"
         target: "/tmp/"
+        port: 22
+        timeout: 30s
 
     - name: Extract and restart on server
       uses: appleboy/ssh-action@v0.1.6
@@ -61,6 +72,9 @@ jobs:
           
           # Install production dependencies only
           npm ci --only=production
+          
+          # Restart application
+          sudo systemctl restart nextjs-app
           
           # Cleanup old backups (keep last 5)
           ls -t backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f
