@@ -54,7 +54,6 @@ export default function AssignmentSubmissionForm({
     const assignmentMedia = initialData?.media?.[0];
 
     const fileUrl = assignmentMedia?.original_url;
-    console.log('initial', initialData)
     const fileName = assignmentMedia?.file_name;
 
     const defaultValues = {

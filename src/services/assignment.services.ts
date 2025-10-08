@@ -31,6 +31,8 @@ export const getAssignmentsByStudentId = async (id: number): Promise<Assignments
         server: true
     });
 
+    console.log("submission data >> ", res.data)
+
     return res.data; // Changed from res.data
 };
 

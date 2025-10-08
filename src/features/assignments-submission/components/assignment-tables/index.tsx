@@ -30,8 +30,6 @@ export function AssignmentSubmissionTable<TData, TValue>({
         debounceMs: 500
     });
 
-    console.log('assignments submission', table.getAllColumns());
-
     return (
         <DataTable table={table}>
             <DataTableToolbar table={table} searchColumnId='assignment_title' />

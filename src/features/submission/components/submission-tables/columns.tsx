@@ -11,6 +11,7 @@ export const submissionColumns: ColumnDef<Assignments>[] = [
     { accessorKey: 'assignment_date', header: 'Assignment Date' },
     { accessorKey: 'due_date', header: 'Due Date' },
     { accessorKey: 'given_marks', header: 'Given Marks' },
+    { accessorKey: 'total_marks', header: 'Total Marks' },
     {
         id: 'Submit',
         cell: ({ row }) => (

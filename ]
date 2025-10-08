@@ -29,7 +29,7 @@ const formSchema = z.object({
     description: z.string().min(10, {
         message: 'Description must be at least 10 characters.'
     }),
-    category_id: z.number({ invalid_type_error: 'Category is required.' }).min(1, { message: 'Category is required.' }),
+    category_id: z.number({ invalid_type_error: 'Category is required.' }).min(1, { message: 'Category is required.' }), // Use number()
     file: z
         .any()
         .nullable()
@@ -41,6 +41,7 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+type EventCategoryData = EventCategory;
 
 const extractDate = (dateTimeString: string | undefined | null) => {
     return dateTimeString ? dateTimeString.substring(0, 10) : '';
@@ -56,8 +57,8 @@ export default function EventForm({
     const router = useRouter();
     const isEdit = !!initialData;
 
-    const [categories, setCategories] = useState<EventCategory[]>([]);
     const [open, setOpen] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     const formatCategories = formatIds(categories);
 
@@ -93,31 +94,44 @@ export default function EventForm({
         fetchCategories();
     }, []);
 
+
     async function onSubmit(values: FormValues) {
         try {
             let isSuccess = false;
 
-            const payload = {
-                ...values,
-            };
+            const submittedStartDate = values.start_date || extractDate(initialData?.start_date) || '';
+            const submittedEndDate = values.end_date || extractDate(initialData?.end_date) || '';
+
+            // 1. Create FormData for multipart submission
+            const formData = new FormData();
+
+            // Append non-file fields
+            formData.append('title', values.title);
+            formData.append('description', values.description);
+            formData.append('category_id', String(values.category_id));
+            formData.append('start_date', submittedStartDate);
+            formData.append('end_date', submittedEndDate);
+
+            // Append file if present
+            if (values.file) {
+                formData.append('file', values.file);
+            }
+
+            // NOTE: For Laravel/REST update requests, you often need to manually include the _method field
+            if (isEdit) {
+                formData.append('_method', 'PUT'); // Or 'PATCH' depending on your backend
+            }
 
             if (isEdit) {
+                // Update Logic
+                // We pass FormData as 'event' and let the service handle the request
                 isSuccess = await updateEvent({
                     id: initialData!.id,
-                    event: payload as unknown as CreateEvent
+                    event: formData as unknown as CreateEvent
                 });
             } else {
-                const createFormData = new FormData();
-                createFormData.append('title', payload.title);
-                createFormData.append('description', payload.description);
-                createFormData.append('category_id', String(payload.category_id));
-                createFormData.append('start_date', payload.start_date);
-                createFormData.append('end_date', payload.end_date);
-                if (payload.file instanceof File) {
-                    createFormData.append('file', payload.file);
-                }
-
-                isSuccess = await createEvent(createFormData as unknown as CreateEvent);
+                // Create Logic
+                isSuccess = await createEvent(formData as unknown as CreateEvent);
             }
 
             if (isSuccess) {
@@ -140,7 +154,6 @@ export default function EventForm({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                         <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-
                             <FormField
                                 control={form.control}
                                 name='category_id'
@@ -175,6 +188,7 @@ export default function EventForm({
                                 )}
                             />
 
+                            {/* DESCRIPTION FIELD */}
                             <FormField
                                 control={form.control}
                                 name='description'
@@ -189,6 +203,7 @@ export default function EventForm({
                                 )}
                             />
 
+                            {/* START DATE FIELD */}
                             <FormField
                                 control={form.control}
                                 name='start_date'
@@ -201,7 +216,7 @@ export default function EventForm({
                                                 onDateChange={(date) =>
                                                     field.onChange(formatDate(date))
                                                 }
-                                                text='Start date'
+                                                text='Select event start date'
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -209,6 +224,7 @@ export default function EventForm({
                                 )}
                             />
 
+                            {/* END DATE FIELD */}
                             <FormField
                                 control={form.control}
                                 name='end_date'
@@ -221,7 +237,7 @@ export default function EventForm({
                                                 onDateChange={(date) =>
                                                     field.onChange(formatDate(date))
                                                 }
-                                                text='End date'
+                                                text='Select event end date'
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -230,6 +246,7 @@ export default function EventForm({
                             />
                         </div>
 
+                        {/* FILE UPLOAD FIELD */}
                         <FormField
                             control={form.control}
                             name='file'
@@ -240,31 +257,24 @@ export default function EventForm({
                                         <Input
                                             type='file'
                                             onChange={(e) => {
+                                                // Manually set the file object
                                                 field.onChange(e.target.files?.[0] ?? null);
                                             }}
                                         />
                                     </FormControl>
                                     <FormMessage />
-                                    {isEdit && initialData?.file && (
-                                        <p className="text-sm text-muted-foreground">
-                                            Current File: **{initialData.file.split('/').pop()}**
-                                        </p>
-                                    )}
                                 </FormItem>
                             )}
                         />
 
-                        <Button
-                            type='submit'
-                            className='cursor-pointer'
-                            disabled={form.formState.isSubmitting}
-                        >
+                        <Button type='submit' className='cursor-pointer' disabled={form.formState.isSubmitting}>
                             {isEdit ? 'Update' : 'Create'} Event
                         </Button>
                     </form>
                 </Form>
             </CardContent>
 
+            {/* Modal for adding a new category */}
             <CategoryModal isOpen={open} onClose={handleModalClose} />
         </Card>
     );

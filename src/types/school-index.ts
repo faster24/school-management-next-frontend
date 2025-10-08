@@ -41,6 +41,7 @@ export type Assignments = {
     assignment_date: string;
     due_date: string;
     given_marks: string;
+    total_marks?: string;
     file?: File | null;
     updated_at: string;
     created_at: string;
@@ -63,19 +64,25 @@ export type Events = {
     id: number;
     title: string;
     description: string;
+    category_id: number;
     start_date: string;
     end_date: string;
     file?: File[];
 };
+
+export type EventCategory = {
+    id: number;
+    name: string;
+}
 
 export type CreateEvent = {
     title: string;
     description: string;
+    category_id: number;
     start_date: string;
     end_date: string;
     file?: File[];
 };
-
 
 export type UpdateEvent = {
     id: number;
@@ -196,6 +203,7 @@ export type AssignmentSubmission = {
 export type UpdateAssigmentSubmission = {
     id: number;
     total_mark: number;
+    graded_by: number;
     mark_in_percentage: number;
     remark: string;
 };
