@@ -245,11 +245,6 @@ export default function EventForm({
                                         />
                                     </FormControl>
                                     <FormMessage />
-                                    {isEdit && initialData?.file && (
-                                        <p className="text-sm text-muted-foreground">
-                                            Current File: **{initialData.file.split('/').pop()}**
-                                        </p>
-                                    )}
                                 </FormItem>
                             )}
                         />

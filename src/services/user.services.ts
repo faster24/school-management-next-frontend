@@ -2,9 +2,9 @@ import { apiRequest } from '@/lib/apiRequest';
 import { CreateUser, User } from '@/types/school-index';
 
 interface UserFilters {
-    page?: string | null;
-    limit?: string | null;
-    search?: string | null;
+    page?: any | null;
+    limit?: any | null;
+    search?: any | null;
 }
 
 export const getUsers = async (filters: UserFilters = {}): Promise<User[]> => {

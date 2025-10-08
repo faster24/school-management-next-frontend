@@ -43,6 +43,7 @@ export type Assignments = {
     given_marks: string;
     total_marks?: string;
     file?: File | null;
+    is_submitted?: boolean;
     updated_at: string;
     created_at: string;
     submissions: Submission[];
@@ -156,6 +157,7 @@ export type User = {
     roles: Role[];
     created_at: string;
     year_id: number;
+    student_year: any;
 };
 
 export type CreateUser = {
@@ -163,12 +165,13 @@ export type CreateUser = {
     email: string;
     phone: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword?: string;
+    confirm_password?: string;
     qualification: string | null;
     birth_date: string | null;
     address: string | null;
     user_image: string | null;
-    enrollment_id: number | null;
+    enrollment_id?: number | null;
     role: string;
     year_id: number | null;
 };
