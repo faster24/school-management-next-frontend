@@ -20,7 +20,7 @@ export default async function OverViewLayout({
     const session = await getServerSession(authOptions);
     const stats: Stats = await getStats();
 
-    console.log('>>> stats: ', stats);
+    console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
 
     return (
         <PageContainer>
