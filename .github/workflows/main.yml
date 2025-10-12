@@ -30,7 +30,7 @@ jobs:
     - name: Create deployment package
       run: |
         mkdir -p deployment
-        cp -r .next next.config.js* package.json package-lock.json public deployment/
+        cp -r .next next.config.ts package.json package-lock.json public deployment/
         tar -czf deployment.tar.gz deployment/
 
     - name: Test SSH connection
