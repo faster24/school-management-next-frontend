@@ -14,8 +14,7 @@
     "lint:fix": "eslint src --fix && pnpm format",
     "lint:strict": "eslint --max-warnings=0 src",
     "format": "prettier --write .",
-    "format:check": "prettier -c -w .",
-    "prepare": "husky"
+    "format:check": "prettier -c -w ."
   },
   "lint-staged": {
     "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
