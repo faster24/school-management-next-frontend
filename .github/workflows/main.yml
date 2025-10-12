@@ -29,7 +29,6 @@ jobs:
         echo "API_URL=${{ secrets.API_URL }}" >> .env
         echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
       env:
-        # Optional: add defaults for debugging if secrets not found
         API_URL: ${{ secrets.API_URL }}
         NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
@@ -39,7 +38,7 @@ jobs:
     - name: Create deployment package
       run: |
         mkdir -p deployment
-        cp -r .next next.config.js* package.json package-lock.json public deployment/
+        cp -r .next next.config.ts package.json package-lock.json public deployment/
         tar -czf deployment.tar.gz deployment/
 
     - name: Deploy to server
@@ -47,7 +46,7 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
+        password: ${{ secrets.SERVER_PASSWORD }}
         source: "deployment.tar.gz"
         target: "/tmp/"
 
