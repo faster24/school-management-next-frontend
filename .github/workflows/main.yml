@@ -24,6 +24,15 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Create .env file for build
+      run: |
+        echo "API_URL=${{ secrets.API_URL }}" >> .env
+        echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
+      env:
+        # Optional: add defaults for debugging if secrets not found
+        API_URL: ${{ secrets.API_URL }}
+        NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
     - name: Build application
       run: npm run build
 
