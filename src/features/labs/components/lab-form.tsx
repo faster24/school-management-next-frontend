@@ -25,7 +25,21 @@ const formSchema = z.object({
     description: z.string().min(10, {
         message: 'Description must be at least 10 characters.'
     }),
-    file: z.any().nullable()
+    file: z
+        .any()
+        .refine((file) => !file || file.size <= 2_000_000, {
+            message: "File size must be less than 2MB",
+        })
+        .refine(
+            (file) =>
+                !file ||
+                ["application/pdf",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                ].includes(file.type),
+            {
+                message: "Only PDF or DOCX files are allowed",
+            }
+        ),
 });
 
 type FormValues = z.infer<typeof formSchema>;

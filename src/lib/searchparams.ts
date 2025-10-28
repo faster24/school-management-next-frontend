@@ -9,6 +9,7 @@ export const searchParams = {
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(10),
     name: parseAsString,
+    title: parseAsString,
     // filters: getFiltersStateParser().withDefault([]),
     // joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')
 };

@@ -51,13 +51,16 @@ export default function SubjectForm({
     const router = useRouter();
     const isEdit = !!initialData;
 
+    console.log(initialData)
+
     const defaultValues = {
         name: initialData?.name || '',
         code: initialData?.code || '',
         is_active: initialData?.is_active || 0,
-        year_id: initialData?.year_id || '',
-        teacher_id: initialData?.teacher_id || '',
-        description: initialData?.description || ''
+        description: initialData?.description || '',
+        // Convert numbers to strings for the form
+        year_id: initialData?.year_id?.toString() || initialData?.years?.[0]?.id?.toString() || '',
+        teacher_id: initialData?.teacher_id?.toString() || initialData?.teachers?.[0]?.id?.toString() || '',
     };
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -83,7 +86,7 @@ export default function SubjectForm({
                 const res = await getTeachers();
                 setTeachers(res);
             } catch (error) {
-                console.error('Failed to fetch years:', error);
+                console.error('Failed to fetch teachers:', error);
             }
         }
 
@@ -157,7 +160,7 @@ export default function SubjectForm({
                                         <FormLabel>Year</FormLabel>
                                         <FormControl>
                                             <select {...field} className='w-full rounded border p-2'>
-                                                <option value=''>Select a year</option>
+                                                <option value="">Select a year</option>
                                                 {years.map((year) => (
                                                     <option key={year.id} value={year.id}>
                                                         {year.name}
@@ -178,9 +181,12 @@ export default function SubjectForm({
                                         <FormLabel>Teacher</FormLabel>
                                         <FormControl>
                                             <select {...field} className='w-full rounded border p-2'>
-                                                <option value=''>Select a teacher</option>
+                                                <option value="">Select a teacher</option>
                                                 {teachers.map((teacher) => (
-                                                    <option key={teacher.id} value={teacher.id}>
+                                                    <option
+                                                        key={teacher.id}
+                                                        value={teacher.id}
+                                                    >
                                                         {teacher.name}
                                                     </option>
                                                 ))}

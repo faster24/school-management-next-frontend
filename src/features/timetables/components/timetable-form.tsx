@@ -33,8 +33,16 @@ const formSchema = z.object({
         .any()
         .nullable()
         .refine((file) => !file || file.size <= 2_000_000, {
-            message: 'File size must be less than 2MB'
+            message: "File size must be less than 2MB",
         })
+        .refine(
+            (file) =>
+                !file ||
+                ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type),
+            {
+                message: "Only JPG, PNG, or WEBP image files are allowed",
+            }
+        ),
 });
 
 export default function TimetableForm({

@@ -1,13 +1,30 @@
 import { apiRequest } from '@/lib/apiRequest';
 import { CreateSubject, Subjects } from '@/types/school-index';
 
-export const getSubjects = async (): Promise<Subjects[]> => {
+interface GetSubjectParams {
+    search?: string;
+    page?: number;
+    perPage?: number;
+}
+
+export const getSubjects = async ({
+    search,
+    page,
+    perPage,
+}: GetSubjectParams = {}): Promise<Subjects[]> => {
+
+    const queryParams = new URLSearchParams();
+
+    if (search) queryParams.append("search", search);
+    if (page) queryParams.append("page", page.toString());
+    if (perPage) queryParams.append("perPage", perPage.toString());
+
     const res = await apiRequest({
         method: 'get',
-        url: `/subjects`,
+        url: `/subjects?${queryParams.toString()}`,
         server: true
     });
-    return res.data;
+    return res.data.data;
 };
 
 export const getTeacherSubjects = async (id: number): Promise<Subjects[]> => {

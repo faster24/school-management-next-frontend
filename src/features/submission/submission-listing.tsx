@@ -34,8 +34,6 @@ export default async function SubmissionListingPage({ }: SubmissionListingPage) 
         assignments = await getAssignmentsByStudentId(session.id);
     }
 
-    console.log('student', assignments)
-
     return (
         <SubmissionTable
             data={assignments}

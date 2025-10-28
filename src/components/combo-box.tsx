@@ -36,7 +36,7 @@ export function Combobox({ value, onChange, data }: ComboboxProps) {
                     variant='outline'
                     role='combobox'
                     aria-expanded={open}
-                    className='w-full justify-between text-white'
+                    className='w-full justify-between text-grey'
                 >
                     {data.find((object) => object.value === value)?.label ||
                         'Select ...'}
@@ -45,7 +45,7 @@ export function Combobox({ value, onChange, data }: ComboboxProps) {
             </PopoverTrigger>
             <PopoverContent className='w-full p-0'>
                 <Command>
-                    <CommandInput placeholder='Search id...' className='h-9' />
+                    <CommandInput placeholder='Search ...' className='h-9' />
                     <CommandList>
                         <CommandEmpty>No data found.</CommandEmpty>
                         <CommandGroup>

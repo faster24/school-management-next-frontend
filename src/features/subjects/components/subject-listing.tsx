@@ -28,7 +28,7 @@ export default async function SubjectListingPage({ }: SubjectListingPage) {
     let subjects: Subjects[] = [];
 
     if (session.role === 'admin') {
-        subjects = await getSubjects();
+        subjects = await getSubjects(filters);
     } else {
         subjects = await getTeacherSubjects(session.id);
     }

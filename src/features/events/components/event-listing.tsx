@@ -9,7 +9,7 @@ import { getEvents } from '@/services/event.services';
 export default async function EventListingPage() {
     // Showcasing the use of search params cache in nested RSCs
     const page = searchParamsCache.get('page');
-    const search = searchParamsCache.get('name');
+    const search = searchParamsCache.get('title');
     const pageLimit = searchParamsCache.get('perPage');
 
     const filters = {
@@ -18,7 +18,7 @@ export default async function EventListingPage() {
         ...(search && { search }),
     };
 
-    const events: Events[] = await getEvents();
+    const events: Events[] = await getEvents(filters);
 
     return (
         <EventTable

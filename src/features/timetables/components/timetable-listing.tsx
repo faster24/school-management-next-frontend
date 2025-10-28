@@ -6,7 +6,6 @@ import { getTimetables } from '@/services/timetable.services';
 type TimetableListingPage = {};
 
 export default async function TimetableListingPage({ }: TimetableListingPage) {
-    // Showcasing the use of search params cache in nested RSCs
     const page = searchParamsCache.get('page');
     const search = searchParamsCache.get('name');
     const pageLimit = searchParamsCache.get('perPage');
@@ -17,7 +16,7 @@ export default async function TimetableListingPage({ }: TimetableListingPage) {
         ...(search && { search }),
     };
 
-    const timetable: Timetable[] = await getTimetables();
+    const timetable: Timetable[] = await getTimetables(filters);
 
     return (
         <TimetableTable

@@ -40,12 +40,31 @@ export const updateEvent = async ({ id, event }: UpdateEvent): Promise<boolean> 
     return false;
 };
 
-export const getEvents = async (): Promise<Events[]> => {
+interface GetEventsParams {
+    search?: string;
+    page?: number;
+    perPage?: number;
+}
+
+export const getEvents = async ({
+    search,
+    page,
+    perPage,
+}: GetEventsParams = {}): Promise<Events[]> => {
+
+    const queryParams = new URLSearchParams();
+
+    if (search) queryParams.append("search", search);
+    if (page) queryParams.append("page", page.toString());
+    if (perPage) queryParams.append("perPage", perPage.toString());
+
     const res = await apiRequest({
         method: 'get',
-        url: '/events',
+        url: `/events?${queryParams.toString()}`,
         server: true
     });
+
+    console.log('query', `/events?${queryParams.toString()}`)
     return res.data.data;
 };
 
