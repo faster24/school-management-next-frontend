@@ -5,6 +5,7 @@ export type Subjects = {
     year_id: string;
     years?: any;
     teacher_id: string;
+    teachers?: any;
     description: string;
     is_active: number;
     createdAt: string;
